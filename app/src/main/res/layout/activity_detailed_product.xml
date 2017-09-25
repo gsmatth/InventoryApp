@@ -3,64 +3,67 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        android:id="@+id/edit_product_name"
+        android:id="@+id/detailed_product_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/edit_product_name_header"
+            android:id="@+id/detailed_product_name_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/product_name_header"/>
         <TextView
-            android:id="@+id/edit_product_name_text"
+            android:id="@+id/detailed_product_name_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/edit_product_current_inventory"
+        android:id="@+id/detailed_product_current_inventory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/edit_product_current_inventory_header"
+            android:id="@+id/detailed_product_current_inventory_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/product_inventory_header"/>
         <TextView
-            android:id="@+id/edit_product_current_inventory_text"
+            android:id="@+id/detailed_product_current_inventory_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/edit_product_supplier"
+        android:id="@+id/detailed_product_supplier"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/edit_product_supplier_header"
+            android:id="@+id/detailed_product_supplier_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/product_supplier_header"/>
         <TextView
-            android:id="@+id/edit_product_supplier_text"
+            android:id="@+id/detailed_product_supplier_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/edit_product_photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <TextView
-            android:id="@+id/edit_product_photo_header"
-            android:layout_width="match_parent"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/product_photo_header"/>
-        <TextView
-            android:id="@+id/edit_product_photo_link"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:text="@string/increase_item_quantity"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/decrease_item_quantity"/>
     </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_product_from_database"/>
+
 
 </LinearLayout>
