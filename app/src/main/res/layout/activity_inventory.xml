@@ -32,17 +32,26 @@
             android:layout_height="wrap_content"
             android:text="@string/product_quantity_header"/>
     </LinearLayout>
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Product entered, add some"/>
     <ListView
         android:id="@+id/product_listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp">
     </ListView>
     <Button
-        android:id="@+id/add_product_button"
+        android:id="@+id/add_new_product_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        android:text="@string/add_new_product"
+        android:layout_marginTop="8dp"/>
 
 </RelativeLayout>
