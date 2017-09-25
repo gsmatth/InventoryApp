@@ -8,7 +8,7 @@
     <string name="increase_item_quantity">Increase Quantity</string>
     <string name="decrease_item_quantity">Decrease Quantity</string>
     <string name="delete_product_from_database">Delete This Product From the Database</string>
-    <string name="product_name_header">Product Name:</string>
     <string name="product_inventory_header">Current Inventory:</string>
     <string name="product_supplier_header">Product Supplier:</string>
+    <string name="product_photo_header">Link to Photo</string>
 </resources>
