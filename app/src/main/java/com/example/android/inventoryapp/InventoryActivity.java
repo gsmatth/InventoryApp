@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
@@ -51,6 +52,16 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
 
             }
         });
+
+        Button addNewProductButton = (Button) findViewById(R.id.add_new_product_button);
+        addNewProductButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+                    public void onClick(View view){
+                Intent intent = new Intent(InventoryActivity.this, EditorActivity.class);
+                startActivity(intent);
+            }
+        });
+
         getLoaderManager().initLoader(URL_LOADER, null, this);
     }
 
@@ -69,8 +80,9 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY,
-                ProductEntry.COLUMN_PRODUCT_PRICE,
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_CONTACT,
+                ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS,
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
                 ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID
         };
         switch(id){
