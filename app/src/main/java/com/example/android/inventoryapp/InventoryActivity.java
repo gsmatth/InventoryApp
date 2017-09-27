@@ -11,6 +11,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -27,6 +28,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.v(LOG_TAG, "entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
@@ -76,6 +78,8 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        Log.v(LOG_TAG, "entered onCreateLoader");
         String[] projection = {
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
@@ -108,6 +112,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.v(LOG_TAG, "entered onLoadFinished");
         mCursorAdapter.swapCursor(data);
 
     }

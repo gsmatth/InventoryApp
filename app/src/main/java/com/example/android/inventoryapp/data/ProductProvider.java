@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
+import static android.R.attr.data;
 import static android.R.attr.value;
 
 /**
@@ -43,8 +44,31 @@ public class ProductProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+        Log.v(LOG_TAG, "entered query method");
+
+        SQLiteDatabase database = mDbHelper.getReadableDatabase();
+
+        Cursor cursor;
+        int match = sUriMatcher.match(uri);
+
+        switch(match){
+            case PRODUCTS:
+                cursor = database.query(ProductEntry.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
+                break;
+            case PRODUCTS_ID:
+                selection = ProductEntry._ID + "=?";
+                //the value of the string in selectionArgs below, will be substituted for the "?" above
+                //the parseId() will convert the last path segment in the uri to a long data type
+                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                cursor = database.query(ProductEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            default:
+                throw new IllegalArgumentException("cannot query unknown uri: " + uri);
+        }
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
     @Nullable

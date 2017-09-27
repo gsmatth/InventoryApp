@@ -11,6 +11,14 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public class ProductDetailActivity  extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+
+    private static final int URL_LOADER = 0;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detailed_product);
+    }
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return null;
