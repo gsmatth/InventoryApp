@@ -30,6 +30,10 @@
                 android:name=".android.support.annotation.PARENT_ACTIVITY"
                 android:value=".InventoryActivity"/>
         </activity>
+        <provider
+            android:authorities="com.example.android.inventoryapp"
+            android:name=".data.ProductProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

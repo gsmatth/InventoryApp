@@ -2,6 +2,8 @@ package com.example.android.inventoryapp;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.icu.math.BigDecimal;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,6 +23,9 @@ import com.example.android.inventoryapp.data.ProductContract;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
 import java.util.Locale;
+
+import static android.R.attr.id;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 
 /**
@@ -51,6 +57,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+        Intent intent = getIntent();
+
+        getLoaderManager().initLoader(URL_LOADER, null, this);
 
         mProductName = (EditText) findViewById(R.id.edit_product_name_text);
         mProductQuantity = (EditText) findViewById(R.id.edit_product_current_inventory_quantity_text);
@@ -75,19 +84,32 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 //        NumberFormat priceFormatted = NumberFormat.getCurrencyInstance(new Locale("usd"));
 //        Log.v(LOG_TAG, "Amont formated into dollars: " + priceFormatted.format(result2));
 
+        Button addNewProductButton = (Button) findViewById(R.id.add_new_product_button);
+        addNewProductButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Log.v(LOG_TAG, "entered onClick, calling saveProduct method");
+                saveProduct();
+            }
+        });
 }
 
 private void saveProduct(){
+    Log.v(LOG_TAG, "entered saveProduct");
     String productName = mProductName.getText().toString().trim();
     Integer productQuantity = Integer.parseInt(mProductQuantity.getText().toString().trim());
     Integer productPrice= Integer.parseInt(mProductPrice.getText().toString().trim());
     String productSupplierName = mProductSupplierName.getText().toString().trim();
+    String productSupplierEmail = mProductSupplierName.getText().toString().trim();
+    String productImageSourceId = mProductImageSourceId.getText().toString().trim();
 
     ContentValues productValues = new ContentValues();
     productValues.put(ProductEntry.COLUMN_PRODUCT_NAME, productName);
     productValues.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, productQuantity);
     productValues.put(ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS, productPrice);
     productValues.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, productSupplierName);
+    productValues.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, productSupplierEmail);
+    productValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID, productImageSourceId);
 
     Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, productValues);
 
@@ -102,11 +124,39 @@ private void saveProduct(){
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return null;
+        Log.v(LOG_TAG, "etnered onCreateLoader");
+
+        String[] projection = {
+                ProductEntry._ID,
+                ProductEntry.COLUMN_PRODUCT_NAME,
+                ProductEntry.COLUMN_PRODUCT_QUANTITY,
+                ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS,
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME
+        };
+        switch(id){
+            case URL_LOADER:
+                return new CursorLoader(
+                        this,
+                        currentProductUri,
+                        projection,
+                        null,
+                        null,
+                        null
+                );
+            default:
+                return null;
+        }
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.v(LOG_TAG, "entered onLoadFinished");
+        if(data.moveToFirst()){
+            data.moveToFirst();
+            String mProductName = data.getString(data.getColumnIndex("name"));
+            int mProductQuantity = data.getInt(data.getColumnIndex("quantity"));
+
+        }
 
     }
 
