@@ -11,7 +11,7 @@ import android.provider.BaseColumns;
 public class ProductContract {
 
     /**
-     * By making contract constructor private, you prevent the contract from being instantiated
+     * By making contract constructor private, you prevent and instance of contract being instantiated
      */
     private ProductContract(){}
 
@@ -30,18 +30,20 @@ public class ProductContract {
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_PRODUCT_NAME = "name";
         public static final String COLUMN_PRODUCT_QUANTITY = "quantity";
-        public static final String COLUMN_PRODUCT_PRICE = "price";
-        public static final String COLUMN_PRODUCT_SUPPLIER_CONTACT = "supplier_contact";
+        public static final String COLUMN_PRODUCT_PRICE_IN_CENTS = "price";
+        public static final String COLUMN_PRODUCT_SUPPLIER_NAME = "supplier";
+        public static final String COLUMN_PRODUCT_SUPPLIER_EMAIL = "supplier_email";
         public static final String COLUMN_PRODUCT_IMAGE_SOURCE_ID = "image_source_id";
 
         public static final String SQL_CREATE_PRODUCTS_TABLE =
-                "CREATE TABLE " + ProductEntry.TABLE_NAME + " (" +
+                "CREATE TABLE " + ProductEntry.TABLE_NAME + "(" +
                         ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL," +
-                        ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL," +
-                        ProductEntry.COLUMN_PRODUCT_PRICE + " INTEGER NOT NULL," +
-                        ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID + "INTEGER," +
-                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_CONTACT + "TEXT NOT NULL)";
+                        ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, " +
+                        ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL, " +
+                        ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS + " INTEGER NOT NULL, " +
+                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + " TEXT NOT NULL, " +
+                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL + " TEXT, " +
+                        ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID + " TEXT" + ");";
 
         public static final String SQL_DELETE_PRODUCT_TABLE =
                 "DROP TABLE IF EXISTS " + ProductEntry.TABLE_NAME;
