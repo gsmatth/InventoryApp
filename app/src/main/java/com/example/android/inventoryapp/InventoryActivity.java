@@ -41,10 +41,25 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         productItems.setAdapter(mCursorAdapter);
 
         productItems.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            /**
+             *solved issue with method not being called by using solution highlighted in:
+             * https://stackoverflow.com/questions/2098558/listview-with-clickable-editable-widget
+             */
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.v(LOG_TAG, "onItemClick entered");
+
+                //Intent(Context packageContext, Class<?> cls)
+                //Create an intent for a specific component
                 Intent intent = new Intent(InventoryActivity.this, ProductDetailActivity.class);
+                /**
+                 * form the content URI that represents the specific product that was clicked on.
+                 * By appending the "id" (passed as input to this method) onto the
+                 * ProductEntry CONTENT_URI.  For example, the URI would be
+                 * content://com.example.android.inventoryapp/products/2   if the
+                 * product id that was clicked on was 2.
+                 */
 
                 Uri currentProductUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
 
@@ -63,7 +78,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
                 startActivity(intent);
             }
         });
-
+        //calls onCreateLoader on initial load of activity
         getLoaderManager().initLoader(URL_LOADER, null, this);
     }
 

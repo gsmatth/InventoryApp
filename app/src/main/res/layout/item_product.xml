@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants">
     <TextView
         android:id="@+id/item_product_name"
         android:layout_width="150dp"
@@ -18,5 +19,5 @@
         android:id="@+id/item_product_sale_button"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:text="@string/product_sale_button_text"/>
+        android:text="@string/product_sale_button_text" />
 </LinearLayout>

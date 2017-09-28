@@ -53,6 +53,6 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:text="@string/add_new_product"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp" />
 
 </RelativeLayout>

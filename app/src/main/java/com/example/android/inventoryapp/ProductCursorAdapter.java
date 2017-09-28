@@ -25,7 +25,7 @@ public class ProductCursorAdapter  extends CursorAdapter{
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        Log.v(LOG_TAG, "entered View constructor");
+        Log.v(LOG_TAG, "entered View constructor in ProductCursorAdapter");
         return LayoutInflater.from(context).inflate(R.layout.item_product, parent, false);
     }
 
@@ -40,7 +40,7 @@ public class ProductCursorAdapter  extends CursorAdapter{
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        Log.v(LOG_TAG, "entered bindView");
+        Log.v(LOG_TAG, "entered bindView in ProductCursorAdapter");
 
         TextView productName = view.findViewById(R.id.item_product_name);
         TextView productQuantity = view.findViewById(R.id.item_product_quantity);

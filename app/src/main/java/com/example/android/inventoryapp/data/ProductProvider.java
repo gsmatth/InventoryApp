@@ -103,8 +103,8 @@ public class ProductProvider extends ContentProvider {
         String supplierEmail = values.getAsString(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
         String imageSourceId = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID);
 
-        Log.v(LOG_TAG, "values of values: " + name + ", " + quantity + ", " + supplierName +
-        ", " + supplierEmail + ", " + imageSourceId);
+        Log.v(LOG_TAG, "values of values: " + name + ", " + quantity + ", "  + price + ", "
+                + supplierName + ", " + supplierEmail + ", " + imageSourceId);
 
         writeDatabase = mDbHelper.getWritableDatabase();
         long newRowId = writeDatabase.insert(ProductEntry.TABLE_NAME, null, values);
