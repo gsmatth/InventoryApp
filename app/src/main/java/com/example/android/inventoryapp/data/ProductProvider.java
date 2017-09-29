@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
+import static android.R.attr.data;
 import static android.R.attr.value;
 
 /**
@@ -43,8 +44,31 @@ public class ProductProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+        Log.v(LOG_TAG, "entered query method");
+
+        SQLiteDatabase database = mDbHelper.getReadableDatabase();
+
+        Cursor cursor;
+        int match = sUriMatcher.match(uri);
+
+        switch(match){
+            case PRODUCTS:
+                cursor = database.query(ProductEntry.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
+                break;
+            case PRODUCTS_ID:
+                selection = ProductEntry._ID + "=?";
+                //the value of the string in selectionArgs below, will be substituted for the "?" above
+                //the parseId() will convert the last path segment in the uri to a long data type
+                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                cursor = database.query(ProductEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            default:
+                throw new IllegalArgumentException("cannot query unknown uri: " + uri);
+        }
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
     @Nullable
@@ -79,8 +103,8 @@ public class ProductProvider extends ContentProvider {
         String supplierEmail = values.getAsString(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
         String imageSourceId = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID);
 
-        Log.v(LOG_TAG, "values of values: " + name + ", " + quantity + ", " + supplierName +
-        ", " + supplierEmail + ", " + imageSourceId);
+        Log.v(LOG_TAG, "values of values: " + name + ", " + quantity + ", "  + price + ", "
+                + supplierName + ", " + supplierEmail + ", " + imageSourceId);
 
         writeDatabase = mDbHelper.getWritableDatabase();
         long newRowId = writeDatabase.insert(ProductEntry.TABLE_NAME, null, values);
@@ -99,7 +123,31 @@ public class ProductProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+        Log.v(LOG_TAG, "entered update in ProductProvider");
+        final int match = sUriMatcher.match(uri);
+        switch(match){
+            case PRODUCTS:
+                return updateProduct(uri, values, selection, selectionArgs);
+            case PRODUCTS_ID:
+                selection = ProductEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updateProduct(uri, values, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update to product is not supported for:  " + uri);
+        }
     }
+
+    private int updateProduct(Uri uri, ContentValues values, String selection, String[] selectionArgs){
+        Log.v(LOG_TAG, "entered updateProduct in ProductProvider");
+        writeDatabase = mDbHelper.getWritableDatabase();
+        int numberOfRowsUpdated = writeDatabase.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
+        Log.v(LOG_TAG, "number of rows updated by updateProduct method:  " + numberOfRowsUpdated);
+        if(numberOfRowsUpdated > 0){
+            Log.v(LOG_TAG, "calling notifyChange method in updateProduct");
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return numberOfRowsUpdated;
+    }
+
 }

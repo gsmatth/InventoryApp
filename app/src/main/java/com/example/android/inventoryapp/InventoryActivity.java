@@ -11,6 +11,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -27,6 +28,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.v(LOG_TAG, "entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
@@ -39,10 +41,25 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         productItems.setAdapter(mCursorAdapter);
 
         productItems.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            /**
+             *solved issue with method not being called by using solution highlighted in:
+             * https://stackoverflow.com/questions/2098558/listview-with-clickable-editable-widget
+             */
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.v(LOG_TAG, "onItemClick entered");
+
+                //Intent(Context packageContext, Class<?> cls)
+                //Create an intent for a specific component
                 Intent intent = new Intent(InventoryActivity.this, ProductDetailActivity.class);
+                /**
+                 * form the content URI that represents the specific product that was clicked on.
+                 * By appending the "id" (passed as input to this method) onto the
+                 * ProductEntry CONTENT_URI.  For example, the URI would be
+                 * content://com.example.android.inventoryapp/products/2   if the
+                 * product id that was clicked on was 2.
+                 */
 
                 Uri currentProductUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
 
@@ -61,7 +78,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
                 startActivity(intent);
             }
         });
-
+        //calls onCreateLoader on initial load of activity
         getLoaderManager().initLoader(URL_LOADER, null, this);
     }
 
@@ -76,6 +93,8 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        Log.v(LOG_TAG, "entered onCreateLoader");
         String[] projection = {
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
@@ -108,6 +127,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.v(LOG_TAG, "entered onLoadFinished");
         mCursorAdapter.swapCursor(data);
 
     }

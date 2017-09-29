@@ -30,7 +30,8 @@
         <EditText
             android:id="@+id/edit_product_price_text"
             android:layout_width="200dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/edit_product_quantitiy"
@@ -45,7 +46,8 @@
         <EditText
             android:id="@+id/edit_product_current_inventory_quantity_text"
             android:layout_width="200dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/edit_product_supplier_name"
@@ -76,7 +78,8 @@
             android:id="@+id/edit_product_supplier_email_text"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="test"/>
+            android:hint="test"
+            android:inputType="textEmailAddress"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/edit_product_image"
@@ -92,7 +95,8 @@
             android:id="@+id/edit_product_image_source_id_text"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="drawable"/>
+            android:hint="drawable"
+            />
     </LinearLayout>
 
     <Button
