@@ -1,6 +1,7 @@
 package com.example.android.inventoryapp;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.android.inventoryapp.data.ProductContract;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
+import com.example.android.inventoryapp.data.ProductProvider;
 
 import static android.R.attr.id;
 import static android.R.attr.name;
@@ -35,6 +37,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 
     private String mProductName;
     private Integer mProductQuantity;
+    private Integer mProductPrice;
     private String mProductSupplierName;
     private String mProductSupplierEmail;
 
@@ -59,7 +62,8 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             @Override
             public void onClick(View view){
                 Log.v(LOG_TAG, "called onClickListener for increase quantity button");
-                increaseQuantityButton(currentProductUri);
+                int numberOfRowsUpdated = increaseProductQuantity(currentProductUri);
+
             }
         });
 
@@ -72,10 +76,30 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 
     }
 
+    private int increaseProductQuantity(Uri uri){
+        Log.v(LOG_TAG, "entered increaseProductQuantity");
+        TextView currentQuantityView = (TextView) findViewById(R.id.detailed_product_current_inventory_text);
+        int currentQuantity = Integer.parseInt(currentQuantityView.getText().toString());
+        Log.v(LOG_TAG,"value of current quantity as integer: " + currentQuantity );
+        int newQuantity = currentQuantity + 1;
+        Log.v(LOG_TAG, "value of new quantity as an int: " + newQuantity);
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
+
+        int mRowsUpdated = getContentResolver().update(
+                uri,
+                values,
+                null,
+                null
+                );
+
+        return mRowsUpdated;
+    }
+
     /**
      * Creates a CursorLoader and defines the data you want to query.  Then, off the main thread
      * it queries through the ContentResolver to the ProductProvider.query().  Upon completion
-     * of the query, the LoaderManager calls the onLoadFInished and passes the Cursor with
+     * of the query, the LoaderManager calls the onLoadFinished and passes the Cursor with
      * the returned data
      * @param id            the row id of the cursor
      * @param args
@@ -88,6 +112,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY,
+                ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS,
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL
         };
@@ -120,6 +145,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             data.moveToFirst();
             mProductName = data.getString(data.getColumnIndex("name"));
             mProductQuantity = data.getInt(data.getColumnIndex("quantity"));
+            mProductPrice = data.getInt(data.getColumnIndex("price"));
             mProductSupplierName = data.getString(data.getColumnIndex("supplier"));
             mProductSupplierEmail = data.getString(data.getColumnIndex("supplier_email"));
             Log.v(LOG_TAG, "value of name in cursor: " + mProductName);
@@ -134,6 +160,10 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             TextView productQuantityText = (TextView)
                     findViewById(R.id.detailed_product_current_inventory_text);
             productQuantityText.setText(String.valueOf(mProductQuantity));
+
+            TextView productPriceText = (TextView)
+                    findViewById(R.id.detailed_product_price_text);
+            productQuantityText.setText(String.valueOf(mProductPrice));
 
             TextView productSupplierNameText = (TextView)
                     findViewById(R.id.detailed_product_supplier_name_text);
@@ -152,12 +182,19 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
         TextView productNameText = (TextView)
                 findViewById(R.id.detailed_product_name_text);
         productNameText.setText("");
+
         TextView productQuantityText = (TextView)
                 findViewById(R.id.detailed_product_current_inventory_text);
         productQuantityText.setText("");
+
+        TextView productPriceText = (TextView)
+                findViewById(R.id.detailed_product_price_text);
+        productQuantityText.setText("");
+
         TextView productSupplierNameText = (TextView)
                 findViewById(R.id.detailed_product_supplier_name_text);
         productSupplierNameText.setText("");
+
         TextView productSupplierEmailText = (TextView)
                 findViewById(R.id.detailed_product_supplier_email_text);
         productSupplierEmailText.setText("");
@@ -165,9 +202,4 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 
     }
 
-    private void increaseProductQuantity(Uri uri){
-        Log.v(LOG_TAG, "entered increaseProductQuantity");
-
-
-    }
 }

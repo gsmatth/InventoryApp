@@ -144,8 +144,10 @@ public class ProductProvider extends ContentProvider {
         int numberOfRowsUpdated = writeDatabase.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
         Log.v(LOG_TAG, "number of rows updated by updateProduct method:  " + numberOfRowsUpdated);
         if(numberOfRowsUpdated > 0){
+            Log.v(LOG_TAG, "calling notifyChange method in updateProduct");
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return numberOfRowsUpdated;
     }
+
 }
