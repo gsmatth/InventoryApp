@@ -123,7 +123,29 @@ public class ProductProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+        Log.v(LOG_TAG, "entered update in ProductProvider");
+        final int match = sUriMatcher.match(uri);
+        switch(match){
+            case PRODUCTS:
+                return updateProduct(uri, values, selection, selectionArgs);
+            case PRODUCTS_ID:
+                selection = ProductEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updateProduct(uri, values, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update to product is not supported for:  " + uri);
+        }
+    }
+
+    private int updateProduct(Uri uri, ContentValues values, String selection, String[] selectionArgs){
+        Log.v(LOG_TAG, "entered updateProduct in ProductProvider");
+        writeDatabase = mDbHelper.getWritableDatabase();
+        int numberOfRowsUpdated = writeDatabase.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
+        Log.v(LOG_TAG, "number of rows updated by updateProduct method:  " + numberOfRowsUpdated);
+        if(numberOfRowsUpdated > 0){
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return numberOfRowsUpdated;
     }
 }

@@ -72,13 +72,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <Button
+            android:id="@+id/increase_quantity_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/increase_item_quantity"/>
+            android:text="@string/increase_item_quantity"
+            />
         <Button
+            android:id="@+id/decrease_quantity_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/decrease_item_quantity"/>
+            android:text="@string/decrease_item_quantity"
+            />
     </LinearLayout>
     <Button
         android:layout_width="wrap_content"
