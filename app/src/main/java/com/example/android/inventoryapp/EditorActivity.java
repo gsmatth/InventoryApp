@@ -55,6 +55,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     };
     protected void onCreate(Bundle savedInstanceState){
+        Log.v(LOG_TAG, "entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         Intent intent = getIntent();
@@ -100,7 +101,7 @@ private void saveProduct(){
     Integer productQuantity = Integer.parseInt(mProductQuantity.getText().toString().trim());
     Integer productPrice= Integer.parseInt(mProductPrice.getText().toString().trim());
     String productSupplierName = mProductSupplierName.getText().toString().trim();
-    String productSupplierEmail = mProductSupplierName.getText().toString().trim();
+    String productSupplierEmail = mProductSupplierEmail.getText().toString().trim();
     String productImageSourceId = mProductImageSourceId.getText().toString().trim();
 
     ContentValues productValues = new ContentValues();
@@ -131,7 +132,10 @@ private void saveProduct(){
                 ProductEntry.COLUMN_PRODUCT_NAME,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY,
                 ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS,
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
+                ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID
+
         };
         switch(id){
             case URL_LOADER:

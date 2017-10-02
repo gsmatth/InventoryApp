@@ -67,6 +67,27 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             }
         });
 
+        final Button decreaseQuantityButton = (Button) findViewById(R.id.decrease_quantity_button);
+        decreaseQuantityButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Log.v(LOG_TAG, "called onClickListener for increase quantity button");
+                int numberOfRowsUpdated = decreaseProductQuantity(currentProductUri);
+
+            }
+        });
+
+        final Button deleteProductButton = (Button) findViewById(R.id.delete_product_button);
+        deleteProductButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+                    public void onClick(View view){
+                Log.v(LOG_TAG, "entered onClick for deleteProductButton");
+                int numberOfRowsDeleted = deleteProduct(currentProductUri);
+                Log.v(LOG_TAG, "number of rows deleted shoud be one.  Actual rows deleted =   " +
+                        numberOfRowsDeleted);
+            }
+        });
+
 
 
         // //calls onCreateLoader on initial load of activity
@@ -83,6 +104,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
         Log.v(LOG_TAG,"value of current quantity as integer: " + currentQuantity );
         int newQuantity = currentQuantity + 1;
         Log.v(LOG_TAG, "value of new quantity as an int: " + newQuantity);
+
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
 
@@ -92,6 +114,37 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
                 null,
                 null
                 );
+
+        return mRowsUpdated;
+    }
+
+    private int deleteProduct(Uri uri){
+        Log.v(LOG_TAG, "entered deleteProduct");
+        int mRowsDeleted = getContentResolver().delete(
+                uri,
+                null,
+                null);
+        Log.v(LOG_TAG, "value of mRowsDeleted returned to  deleteProducts mehtod: " + mRowsDeleted);
+        return mRowsDeleted;
+    }
+
+    private int decreaseProductQuantity(Uri uri){
+        Log.v(LOG_TAG, "entered increaseProductQuantity");
+        TextView currentQuantityView = (TextView) findViewById(R.id.detailed_product_current_inventory_text);
+        int currentQuantity = Integer.parseInt(currentQuantityView.getText().toString());
+        Log.v(LOG_TAG,"value of current quantity as integer: " + currentQuantity );
+        int newQuantity = currentQuantity - 1;
+        Log.v(LOG_TAG, "value of new quantity as an int: " + newQuantity);
+
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
+
+        int mRowsUpdated = getContentResolver().update(
+                uri,
+                values,
+                null,
+                null
+        );
 
         return mRowsUpdated;
     }
@@ -150,6 +203,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             mProductSupplierEmail = data.getString(data.getColumnIndex("supplier_email"));
             Log.v(LOG_TAG, "value of name in cursor: " + mProductName);
             Log.v(LOG_TAG, "value of quantity in cursor: " + mProductQuantity);
+            Log.v(LOG_TAG, "value of price in cursor: " + mProductPrice);
             Log.v(LOG_TAG, "value of supplier in cursor: " + mProductSupplierName);
             Log.v(LOG_TAG, "value of email in cursor: " + mProductSupplierEmail);
 
@@ -163,7 +217,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 
             TextView productPriceText = (TextView)
                     findViewById(R.id.detailed_product_price_text);
-            productQuantityText.setText(String.valueOf(mProductPrice));
+            productPriceText.setText(String.valueOf(mProductPrice));
 
             TextView productSupplierNameText = (TextView)
                     findViewById(R.id.detailed_product_supplier_name_text);
