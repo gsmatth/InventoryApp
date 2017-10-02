@@ -1,13 +1,19 @@
 package com.example.android.inventoryapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+
+import com.example.android.inventoryapp.data.ProductContract;
+import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
 /**
  * Created by djp on 9/20/17.
@@ -39,20 +45,51 @@ public class ProductCursorAdapter  extends CursorAdapter{
      *                      to the correct row
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
         Log.v(LOG_TAG, "entered bindView in ProductCursorAdapter");
 
         TextView productName = view.findViewById(R.id.item_product_name);
-        TextView productQuantity = view.findViewById(R.id.item_product_quantity);
+        final TextView productQuantity = view.findViewById(R.id.item_product_quantity);
         TextView productPrice = view.findViewById(R.id.item_product_price);
 
         String name = cursor.getString(cursor.getColumnIndex("name"));
-        String quantity = cursor.getString(cursor.getColumnIndex("quantity"));
+        final String quantity = cursor.getString(cursor.getColumnIndex("quantity"));
         String price = cursor.getString(cursor.getColumnIndex("price"));
+        String _id = cursor.getString(cursor.getColumnIndex("_id"));
 
         productName.setText(name);
         productQuantity.setText(quantity);
         productPrice.setText(price);
 
+        /**the saleButton functionality was accomplished with the assistance of:
+         *
+         * https://discussions.udacity.com/t/how-to-implement-sale-button/344691/10
+         *   AND
+         * https://stackoverflow.com/questions/15941374/how-do-i-call-onclick-listener-of-a-
+         * button-which-resides-in-listview-item?rq=1
+*/
+        final Uri itemUri = Uri.withAppendedPath(ProductEntry.CONTENT_URI, _id);
+
+        Button saleButton = (Button) view.findViewById(R.id.item_product_sale_button);
+        saleButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Uri uri = itemUri;
+                int currentQuantity = Integer.parseInt(productQuantity.getText().toString());
+                int reducedQuantity = currentQuantity - 1;
+                ContentValues values = new ContentValues();
+                values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, reducedQuantity);
+                int mRowsUpdated = context.getContentResolver().update(
+                        uri,
+                        values,
+                        null,
+                        null
+                );
+            }
+        });
+
+
+
     }
 }
+

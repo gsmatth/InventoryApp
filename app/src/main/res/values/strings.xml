@@ -12,5 +12,6 @@
     <string name="product_supplier_name_header">Product Supplier:</string>
     <string name="product_supplier_email_header">Supplier Email</string>
     <string name="product_photo_header">Link to Image</string>
+    <string name="order_product_from_supplier">Order Product From Supplier</string>
 
 </resources>

@@ -12,7 +12,6 @@
         <activity android:name=".InventoryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,15 +24,22 @@
         </activity>
         <activity
             android:name=".ProductDetailActivity"
-            android:parentActivityName=".InventoryActivity">
+            android:parentActivityName=".InventoryActivity"
+            android:label="Product Detail">
             <meta-data
                 android:name=".android.support.annotation.PARENT_ACTIVITY"
                 android:value=".InventoryActivity"/>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO"/>
+                <data android:scheme="mailto"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
         <provider
             android:authorities="com.example.android.inventoryapp"
             android:name=".data.ProductProvider"
             android:exported="false"/>
+
     </application>
 
 </manifest>

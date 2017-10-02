@@ -88,6 +88,20 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             }
         });
 
+        final Button orderProductButton = (Button) findViewById(R.id.order_product_button);
+        orderProductButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+                    public void onClick(View view){
+                Log.v(LOG_TAG, "enterd orderProductButton onClick");
+                String[] addresses = new String[]{"hikeandbike@icloud.com"};
+                String[] ccAddresses = new String[]{"terrainassociation@gmail.com"};
+                String subject = "order these new product numbers";
+                String emailBody = "I woud like to order x number sof these";
+                composeEmail(addresses, ccAddresses, subject, emailBody);
+
+            }
+        });
+
 
 
         // //calls onCreateLoader on initial load of activity
@@ -95,6 +109,21 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             getLoaderManager().initLoader(URL_LOADER, null, this);
         }
 
+    }
+
+    public void composeEmail(String[] addresses, String[] ccAddresses, String subject, String emailBody){
+        Log.v(LOG_TAG, "entered compose email method");
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_CC, ccAddresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, emailBody);
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        } else {
+            Log.v(LOG_TAG, "unable to start activity because resolve activity is null");
+        }
     }
 
     private int increaseProductQuantity(Uri uri){
