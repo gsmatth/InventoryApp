@@ -22,6 +22,7 @@ import com.example.android.inventoryapp.data.ProductProvider;
 import static android.R.attr.id;
 import static android.R.attr.name;
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+import static com.example.android.inventoryapp.R.string.product_order_email_subject;
 
 /**
  * Created by djp on 9/22/17.
@@ -92,22 +93,33 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
         orderProductButton.setOnClickListener(new View.OnClickListener(){
             @Override
                     public void onClick(View view){
-                Log.v(LOG_TAG, "enterd orderProductButton onClick");
-                String[] addresses = new String[]{"hikeandbike@icloud.com"};
-                String[] ccAddresses = new String[]{"terrainassociation@gmail.com"};
-                String subject = "order these new product numbers";
-                String emailBody = "I woud like to order x number sof these";
-                composeEmail(addresses, ccAddresses, subject, emailBody);
+                    orderProduct(view);
 
             }
         });
-
-
 
         // //calls onCreateLoader on initial load of activity
         if(currentProductUri != null){
             getLoaderManager().initLoader(URL_LOADER, null, this);
         }
+
+    }
+
+    private void orderProduct(View view){
+        Log.v(LOG_TAG, "entered orderProduct method");
+        TextView productNameView = (TextView) findViewById(R.id.detailed_product_name_text);
+        String productName = productNameView.getText().toString().trim();
+        TextView supplierEmailView = (TextView) findViewById(R.id.detailed_product_supplier_email_text);
+        String[] ccAddresses = new String[]{"gsmatth@icloud.com"};
+        String supplierEmail = supplierEmailView.getText().toString().trim();
+        String[] addresses = new String[]{supplierEmail};
+        String subject = "Request for estimate on part: " + productName;
+        String emailBody = "Please respond to this email address with an estimate of the cost " +
+                 "to purchase one " + productName + ". The estimate should include any applicable " +
+                 "sales tax and shipping costs.";
+        Log.v(LOG_TAG, "email body: " +emailBody);
+        composeEmail(addresses, ccAddresses, subject, emailBody);
+
 
     }
 
