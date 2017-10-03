@@ -22,15 +22,15 @@
             android:text="@string/product_name_header"
             />
         <TextView
-            android:id="@+id/product_price_header"
+            android:id="@+id/product_quantitiy_header"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="@string/product_price_header"/>
+            android:text="@string/product_quantity_header"/>
         <TextView
-            android:id="@+id/product_quantitiy_header"
+            android:id="@+id/edit_product_price_header"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
-            android:text="@string/product_quantity_header"/>
+            android:text="@string/product_price_header"/>
     </LinearLayout>
     <TextView
         android:id="@+id/empty_view"

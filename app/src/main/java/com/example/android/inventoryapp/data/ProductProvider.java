@@ -12,8 +12,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
-import static android.R.attr.data;
-import static android.R.attr.value;
 
 /**
  * Created by djp on 9/20/17.
@@ -118,18 +116,41 @@ public class ProductProvider extends ContentProvider {
     };
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        Log.v(LOG_TAG, "entered delete method in ProductProvider");
+        final int match = sUriMatcher.match(uri);
+        switch(match){
+            case PRODUCTS:
+                return deleteProduct(uri, selection, selectionArgs);
+            case PRODUCTS_ID:
+                selection = ProductEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                Log.v(LOG_TAG, "value of selection in case PETS_ID:  " + selection);
+                Log.v(LOG_TAG, "value of selectionArgs in case PETS_ID:  " + selectionArgs);
+                return deleteProduct(uri, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("delete is not supported for " + uri);
+        }
+    }
+    public int deleteProduct(Uri uri, String selection, String[] selectionArgs){
+        writeDatabase = mDbHelper.getWritableDatabase();
+        int numberOfRowsDeleted = writeDatabase.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
+        if(numberOfRowsDeleted > 0){
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return numberOfRowsDeleted;
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         Log.v(LOG_TAG, "entered update in ProductProvider");
         final int match = sUriMatcher.match(uri);
         switch(match){
             case PRODUCTS:
                 return updateProduct(uri, values, selection, selectionArgs);
             case PRODUCTS_ID:
+                Log.v(LOG_TAG, "enterd PRODUCT_ID case in update");
                 selection = ProductEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateProduct(uri, values, selection, selectionArgs);

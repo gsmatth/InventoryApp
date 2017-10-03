@@ -3,11 +3,13 @@ package com.example.android.inventoryapp;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,7 +23,7 @@ import com.example.android.inventoryapp.data.ProductProvider;
 
 import static android.R.attr.id;
 import static android.R.attr.name;
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 
 /**
  * Created by djp on 9/22/17.
@@ -67,13 +69,102 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             }
         });
 
+        final Button decreaseQuantityButton = (Button) findViewById(R.id.decrease_quantity_button);
+        decreaseQuantityButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Log.v(LOG_TAG, "called onClickListener for increase quantity button");
+                int numberOfRowsUpdated = decreaseProductQuantity(currentProductUri);
 
+            }
+        });
+
+        final Button deleteProductButton = (Button) findViewById(R.id.delete_product_button);
+
+        deleteProductButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+                    public void onClick(View view){
+                showDeleteConfirmationDialog();
+                Log.v(LOG_TAG, "entered onClick for deleteProductButton");
+//                int numberOfRowsDeleted = deleteProduct(currentProductUri);
+//                Log.v(LOG_TAG, "number of rows deleted shoud be one.  Actual rows deleted =   " +
+//                        numberOfRowsDeleted);
+            }
+        });
+
+        final Button orderProductButton = (Button) findViewById(R.id.order_product_button);
+        orderProductButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+                    public void onClick(View view){
+                    orderProduct(view);
+
+            }
+        });
 
         // //calls onCreateLoader on initial load of activity
         if(currentProductUri != null){
             getLoaderManager().initLoader(URL_LOADER, null, this);
         }
 
+    }
+
+    private void showDeleteConfirmationDialog(){
+        Log.v(LOG_TAG, " entered showDeleteConfirmationDialog");
+        AlertDialog.Builder  builder = new AlertDialog.Builder(this);
+        Log.v(LOG_TAG, "row 1");
+        builder.setMessage(R.string.delete_product_dialog_msg);
+        Log.v(LOG_TAG, "row2");
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+                Log.v(LOG_TAG, "entered onCLick in showDeleteConfirmationDIalog");
+                deleteProduct(currentProductUri);
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                Log.v(LOG_TAG, "enterd dialog dismiss in setNegativeButton");
+                if(dialog != null){
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void orderProduct(View view){
+        Log.v(LOG_TAG, "entered orderProduct method");
+        TextView productNameView = (TextView) findViewById(R.id.detailed_product_name_text);
+        String productName = productNameView.getText().toString().trim();
+        TextView supplierEmailView = (TextView) findViewById(R.id.detailed_product_supplier_email_text);
+        String[] ccAddresses = new String[]{"gsmatth@icloud.com"};
+        String supplierEmail = supplierEmailView.getText().toString().trim();
+        String[] addresses = new String[]{supplierEmail};
+        String subject = "Request for estimate on part: " + productName;
+        String emailBody = "Please respond to this email address with an estimate of the cost " +
+                 "to purchase one " + productName + ". The estimate should include any applicable " +
+                 "sales tax and shipping costs.";
+        Log.v(LOG_TAG, "email body: " +emailBody);
+        composeEmail(addresses, ccAddresses, subject, emailBody);
+
+
+    }
+
+    public void composeEmail(String[] addresses, String[] ccAddresses, String subject, String emailBody){
+        Log.v(LOG_TAG, "entered compose email method");
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_CC, ccAddresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, emailBody);
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        } else {
+            Log.v(LOG_TAG, "unable to start activity because resolve activity is null");
+        }
     }
 
     private int increaseProductQuantity(Uri uri){
@@ -83,6 +174,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
         Log.v(LOG_TAG,"value of current quantity as integer: " + currentQuantity );
         int newQuantity = currentQuantity + 1;
         Log.v(LOG_TAG, "value of new quantity as an int: " + newQuantity);
+
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
 
@@ -92,6 +184,37 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
                 null,
                 null
                 );
+
+        return mRowsUpdated;
+    }
+
+    private int deleteProduct(Uri uri){
+        Log.v(LOG_TAG, "entered deleteProduct");
+        int mRowsDeleted = getContentResolver().delete(
+                uri,
+                null,
+                null);
+        Log.v(LOG_TAG, "value of mRowsDeleted returned to  deleteProducts mehtod: " + mRowsDeleted);
+        return mRowsDeleted;
+    }
+
+    private int decreaseProductQuantity(Uri uri){
+        Log.v(LOG_TAG, "entered increaseProductQuantity");
+        TextView currentQuantityView = (TextView) findViewById(R.id.detailed_product_current_inventory_text);
+        int currentQuantity = Integer.parseInt(currentQuantityView.getText().toString());
+        Log.v(LOG_TAG,"value of current quantity as integer: " + currentQuantity );
+        int newQuantity = currentQuantity - 1;
+        Log.v(LOG_TAG, "value of new quantity as an int: " + newQuantity);
+
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
+
+        int mRowsUpdated = getContentResolver().update(
+                uri,
+                values,
+                null,
+                null
+        );
 
         return mRowsUpdated;
     }
@@ -150,6 +273,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             mProductSupplierEmail = data.getString(data.getColumnIndex("supplier_email"));
             Log.v(LOG_TAG, "value of name in cursor: " + mProductName);
             Log.v(LOG_TAG, "value of quantity in cursor: " + mProductQuantity);
+            Log.v(LOG_TAG, "value of price in cursor: " + mProductPrice);
             Log.v(LOG_TAG, "value of supplier in cursor: " + mProductSupplierName);
             Log.v(LOG_TAG, "value of email in cursor: " + mProductSupplierEmail);
 
@@ -163,7 +287,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 
             TextView productPriceText = (TextView)
                     findViewById(R.id.detailed_product_price_text);
-            productQuantityText.setText(String.valueOf(mProductPrice));
+            productPriceText.setText(String.valueOf(mProductPrice));
 
             TextView productSupplierNameText = (TextView)
                     findViewById(R.id.detailed_product_supplier_name_text);
