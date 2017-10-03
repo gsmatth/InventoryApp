@@ -3,11 +3,13 @@ package com.example.android.inventoryapp;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,8 +23,7 @@ import com.example.android.inventoryapp.data.ProductProvider;
 
 import static android.R.attr.id;
 import static android.R.attr.name;
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
-import static com.example.android.inventoryapp.R.string.product_order_email_subject;
+
 
 /**
  * Created by djp on 9/22/17.
@@ -79,13 +80,15 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
         });
 
         final Button deleteProductButton = (Button) findViewById(R.id.delete_product_button);
+
         deleteProductButton.setOnClickListener(new View.OnClickListener(){
             @Override
                     public void onClick(View view){
+                showDeleteConfirmationDialog();
                 Log.v(LOG_TAG, "entered onClick for deleteProductButton");
-                int numberOfRowsDeleted = deleteProduct(currentProductUri);
-                Log.v(LOG_TAG, "number of rows deleted shoud be one.  Actual rows deleted =   " +
-                        numberOfRowsDeleted);
+//                int numberOfRowsDeleted = deleteProduct(currentProductUri);
+//                Log.v(LOG_TAG, "number of rows deleted shoud be one.  Actual rows deleted =   " +
+//                        numberOfRowsDeleted);
             }
         });
 
@@ -103,6 +106,32 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             getLoaderManager().initLoader(URL_LOADER, null, this);
         }
 
+    }
+
+    private void showDeleteConfirmationDialog(){
+        Log.v(LOG_TAG, " entered showDeleteConfirmationDialog");
+        AlertDialog.Builder  builder = new AlertDialog.Builder(this);
+        Log.v(LOG_TAG, "row 1");
+        builder.setMessage(R.string.delete_product_dialog_msg);
+        Log.v(LOG_TAG, "row2");
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+                Log.v(LOG_TAG, "entered onCLick in showDeleteConfirmationDIalog");
+                deleteProduct(currentProductUri);
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                Log.v(LOG_TAG, "enterd dialog dismiss in setNegativeButton");
+                if(dialog != null){
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void orderProduct(View view){

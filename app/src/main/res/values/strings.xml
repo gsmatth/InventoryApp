@@ -13,5 +13,8 @@
     <string name="product_supplier_email_header">Supplier Email</string>
     <string name="product_photo_header">Link to Image</string>
     <string name="order_product_from_supplier">Order Product From Supplier</string>
+    <string name="delete_product_dialog_msg">Delete this product from the database?</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 
 </resources>
