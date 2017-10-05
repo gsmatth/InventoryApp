@@ -43,7 +43,7 @@ public class ProductContract {
                         ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS + " INTEGER, " +
                         ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + " TEXT, " +
                         ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL + " TEXT, " +
-                        ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID + " TEXT" + ");";
+                        ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID + "TEXT" + ");";
 
         public static final String SQL_DELETE_PRODUCT_TABLE =
                 "DROP TABLE IF EXISTS " + ProductEntry.TABLE_NAME;

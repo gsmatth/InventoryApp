@@ -101,8 +101,8 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
                 ProductEntry.COLUMN_PRODUCT_QUANTITY,
                 ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS,
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
-                ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL
+//                ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID
         };
         switch(id){
             case URL_LOADER:

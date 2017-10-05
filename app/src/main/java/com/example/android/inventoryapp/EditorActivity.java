@@ -1,15 +1,19 @@
 package com.example.android.inventoryapp;
 
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.icu.math.BigDecimal;
 import android.icu.text.NumberFormat;
 import android.icu.util.Currency;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,11 +21,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.ProductContract;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 import static android.R.attr.id;
@@ -42,6 +51,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mProductSupplierEmail;
     private EditText mProductImageSourceId;
     private EditText mProductPrice;
+    private ImageView mProductImageView;
+
+    private Uri productImageUri;
+    private static final int SELECT_IMAGE_REQUEST = 0;
+
+
+
 
     private Uri currentProductUri;
     private static final int URL_LOADER = 0;
@@ -68,6 +84,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mProductSupplierEmail = (EditText) findViewById(R.id.edit_product_supplier_email_text);
         mProductImageSourceId = (EditText) findViewById(R.id.edit_product_image_source_id_text);
         mProductPrice = (EditText) findViewById(R.id.edit_product_price_text);
+        mProductImageView = (ImageView) findViewById(R.id.product_image);
 
         mProductName.setOnTouchListener(mTouchListener);
         mProductQuantity.setOnTouchListener(mTouchListener);
@@ -75,6 +92,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mProductSupplierEmail.setOnTouchListener(mTouchListener);
         mProductImageSourceId.setOnTouchListener(mTouchListener);
         mProductPrice.setOnTouchListener(mTouchListener);
+
+
+        final Button selectProductImageButton = (Button) findViewById(R.id.select_product_image_button);
+        selectProductImageButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Log.v(LOG_TAG, "selectProductImageButton onClick called");
+                openImageSelector();
+            }
+        });
 
 
         /**
@@ -95,7 +122,96 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         });
 }
 
-private void saveProduct(){
+    public void openImageSelector(){
+        Log.v(LOG_TAG, "entered openImageSelector");
+        Intent intent;
+        if(Build.VERSION.SDK_INT < 19){
+            Log.v(LOG_TAG, "using sdk < 19");
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+        } else {
+            Log.v(LOG_TAG, "using sdk >= 19");
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
+        intent.setType("image/*");
+        Log.v(LOG_TAG, "calling startActivity");
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), SELECT_IMAGE_REQUEST);
+    }
+
+    //called when photo is clicked on in openImageSelector
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData){
+
+        Log.v(LOG_TAG, "entered onActivityResults");
+        if(requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK){
+            Log.v(LOG_TAG, "value of resultData: " + resultData.getData());
+            if(resultData != null){
+                productImageUri = resultData.getData();
+                Log.v(LOG_TAG, "productImageUri value in onActivityResult: " + productImageUri);
+                mProductImageSourceId.setText(productImageUri.toString());
+                mProductImageView.setImageBitmap(getBitMapFromUri(productImageUri));
+
+            }
+        }
+    }
+
+    public Bitmap getBitMapFromUri(Uri productImageUri) {
+
+        Log.v(LOG_TAG, "entered getBitMapFromUri");
+//
+        if (productImageUri == null || productImageUri.toString().isEmpty()) {
+            Log.v(LOG_TAG, "productImageUri is null or is empty");
+            return null;
+        }
+//
+        int targetW = mProductImageView.getWidth();
+        int targetH = mProductImageView.getHeight();
+//        return null;
+//
+        InputStream input = null;
+        try {
+            Log.v(LOG_TAG, "entered try block");
+            input = this.getContentResolver().openInputStream(productImageUri);
+            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+            bitmapOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(input, null, bitmapOptions);
+            input.close();
+
+
+            //The resulting width of the bitmap.
+            int photoW = bitmapOptions.outWidth;
+            //The resulting height of the bitmap.
+            int photoH = bitmapOptions.outHeight;
+
+            int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+            bitmapOptions.inJustDecodeBounds = false;
+            //If set to a value > 1, requests the decoder to subsample the original image,
+            // returning a smaller image to save memory.
+            bitmapOptions.inSampleSize = scaleFactor;
+
+            input = this.getContentResolver().openInputStream(productImageUri);
+            Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+            input.close();
+            return bitmap;
+
+        } catch (FileNotFoundException e) {
+            Log.e(LOG_TAG, "failed to load image: ", e);
+            return null;
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Failed to load image.", e);
+        } finally {
+            try {
+                input.close();
+            } catch (IOException e) {
+            }
+        }
+        Log.e(LOG_TAG, "getting ready to return null at end of getBitmapfromUri");
+        return null;
+    }
+
+
+    private void saveProduct(){
     Log.v(LOG_TAG, "entered saveProduct");
     String productName = mProductName.getText().toString().trim();
     Integer productQuantity = Integer.parseInt(mProductQuantity.getText().toString().trim());
