@@ -33,17 +33,17 @@ public class ProductContract {
         public static final String COLUMN_PRODUCT_PRICE_IN_CENTS = "price";
         public static final String COLUMN_PRODUCT_SUPPLIER_NAME = "supplier";
         public static final String COLUMN_PRODUCT_SUPPLIER_EMAIL = "supplier_email";
-        public static final String COLUMN_PRODUCT_IMAGE_SOURCE_ID = "image_source_id";
+        public static final String COLUMN_PRODUCT_IMAGE_URI = "image_uri";
 
         public static final String SQL_CREATE_PRODUCTS_TABLE =
-                "CREATE TABLE " + ProductEntry.TABLE_NAME + "(" +
-                        ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        ProductEntry.COLUMN_PRODUCT_NAME + " TEXT, " +
-                        ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER, " +
-                        ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS + " INTEGER, " +
-                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + " TEXT, " +
-                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL + " TEXT, " +
-                        ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID + "TEXT" + ");";
+                "CREATE TABLE " + ProductEntry.TABLE_NAME + " (" +
+                        ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        ProductEntry.COLUMN_PRODUCT_NAME + " TEXT," +
+                        ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER," +
+                        ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS + " INTEGER," +
+                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + " TEXT," +
+                        ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL + " TEXT," +
+                        ProductEntry.COLUMN_PRODUCT_IMAGE_URI + " TEXT" + ");";
 
         public static final String SQL_DELETE_PRODUCT_TABLE =
                 "DROP TABLE IF EXISTS " + ProductEntry.TABLE_NAME;

@@ -34,6 +34,7 @@ import java.io.InputStream;
 
 import static android.R.attr.id;
 import static android.R.attr.name;
+import static android.net.Uri.parse;
 import static android.provider.LiveFolders.INTENT;
 
 
@@ -54,7 +55,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
     private Integer mProductPrice;
     private String mProductSupplierName;
     private String mProductSupplierEmail;
-    private Integer mProductImageSourceId;
+    private String mProductImageUri;
 
     private static final int SELECT_IMAGE_REQUEST = 0;
     private ImageView productImageView;
@@ -78,29 +79,12 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
         Intent intent = getIntent();
         currentProductUri = intent.getData();
         Log.v(LOG_TAG, "value of currentProductUri should not be null:  " + currentProductUri);
-        productImageTextView = (TextView) findViewById(R.id.product_image_text);
-        productImageView = (ImageView) findViewById(R.id.product_image);
-
-//        final Button selectProductImageButton = (Button) findViewById(R.id.select_product_image_button);
-//        selectProductImageButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view){
-//                Log.v(LOG_TAG, "selectProductImageButton onClick called");
-//                openImageSelector();
-//            }
-//        });
-
-
-
-//        final Button addProductImageButton = (Button) findViewById(R.id.add_product_image_button);
-//        addProductImageButton.setOnClickListener(new View.OnClickListener(){
-
-//            @Override
-//            public void onClick(View view) {
+//        productImageTextView = (TextView) findViewById(R.id.product_image_text);
+        productImageView = (ImageView) findViewById(R.id.product_detail_image);
+//        openImageSelector();
+//
 //                ActivityCompat.requestPermissions(ProductDetailActivity.this,
 //                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_GALLERY);
-//            }
-//        });
 
         final Button increaseQuantityButton = (Button) findViewById(R.id.increase_quantity_button);
         increaseQuantityButton.setOnClickListener(new View.OnClickListener(){
@@ -198,7 +182,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
     public void composeEmail(String[] addresses, String[] ccAddresses, String subject, String emailBody){
         Log.v(LOG_TAG, "entered compose email method");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:"));
+        intent.setData(parse("mailto:"));
         intent.putExtra(Intent.EXTRA_EMAIL, addresses);
         intent.putExtra(Intent.EXTRA_CC, ccAddresses);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
@@ -293,60 +277,63 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 //        }
 //    }
 
-//    public Bitmap getBitMapFromUri(Uri productImageUri) {
+    public Bitmap getBitMapFromUri(Uri productImageUri) {
+
+        Log.v(LOG_TAG, "entered getBitMapFromUri");
 //
-//        Log.v(LOG_TAG, "entered getBitMapFromUri");
-////
-//        if (productImageUri == null || productImageUri.toString().isEmpty()) {
-//            Log.v(LOG_TAG, "productImageUri is null or is empty");
-//            return null;
-//        }
-////
-//        int targetW = productImageView.getWidth();
-//        int targetH = productImageView.getHeight();
-////        return null;
-////
-//        InputStream input = null;
-//        try {
-//            Log.v(LOG_TAG, "entered try block");
-//            input = this.getContentResolver().openInputStream(productImageUri);
-//            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-//            bitmapOptions.inJustDecodeBounds = true;
-//            BitmapFactory.decodeStream(input, null, bitmapOptions);
-//            input.close();
+        if (productImageUri == null || productImageUri.toString().isEmpty()) {
+            Log.v(LOG_TAG, "productImageUri is null or is empty");
+            return null;
+        }
 //
-//
-//            //The resulting width of the bitmap.
-//            int photoW = bitmapOptions.outWidth;
-//            //The resulting height of the bitmap.
-//            int photoH = bitmapOptions.outHeight;
-//
-//            int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-//
-//            bitmapOptions.inJustDecodeBounds = false;
-//            //If set to a value > 1, requests the decoder to subsample the original image,
-//            // returning a smaller image to save memory.
-//            bitmapOptions.inSampleSize = scaleFactor;
-//
-//            input = this.getContentResolver().openInputStream(productImageUri);
-//            Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
-//            input.close();
-//            return bitmap;
-//
-//        } catch (FileNotFoundException e) {
-//            Log.e(LOG_TAG, "failed to load image: ", e);
-//            return null;
-//        } catch (IOException e) {
-//            Log.e(LOG_TAG, "Failed to load image.", e);
-//        } finally {
-//            try {
-//                input.close();
-//            } catch (IOException e) {
-//            }
-//        }
-//        Log.e(LOG_TAG, "getting ready to return null at end of getBitmapfromUri");
+        int targetW = productImageView.getWidth();
+        int targetH = productImageView.getHeight();
 //        return null;
-//    }
+//
+        InputStream input = null;
+        try {
+            Log.v(LOG_TAG, "entered try block");
+            input = this.getContentResolver().openInputStream(productImageUri);
+            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+            bitmapOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(input, null, bitmapOptions);
+            input.close();
+
+
+            //The resulting width of the bitmap.
+            int photoW = bitmapOptions.outWidth;
+            //The resulting height of the bitmap.
+            int photoH = bitmapOptions.outHeight;
+
+            int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+            bitmapOptions.inJustDecodeBounds = false;
+            //If set to a value > 1, requests the decoder to subsample the original image,
+            // returning a smaller image to save memory.
+            bitmapOptions.inSampleSize = scaleFactor;
+
+            input = this.getContentResolver().openInputStream(productImageUri);
+            Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+            if(bitmap == null){
+                Log.v(LOG_TAG, "bitmap is null");
+            }
+            input.close();
+            return bitmap;
+
+        } catch (FileNotFoundException e) {
+            Log.e(LOG_TAG, "failed to load image: ", e);
+            return null;
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Failed to load image.", e);
+        } finally {
+            try {
+                input.close();
+            } catch (IOException e) {
+            }
+        }
+        Log.e(LOG_TAG, "getting ready to return null at end of getBitmapfromUri");
+        return null;
+    }
 
     /**
      * Creates a CursorLoader and defines the data you want to query.  Then, off the main thread
@@ -366,8 +353,8 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
                 ProductEntry.COLUMN_PRODUCT_QUANTITY,
                 ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS,
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL
-//                ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID
+                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
+                ProductEntry.COLUMN_PRODUCT_IMAGE_URI
         };
         switch(id){
             case URL_LOADER:
@@ -401,13 +388,13 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             mProductPrice = data.getInt(data.getColumnIndex("price"));
             mProductSupplierName = data.getString(data.getColumnIndex("supplier"));
             mProductSupplierEmail = data.getString(data.getColumnIndex("supplier_email"));
-//            mProductImageSourceId = data.getInt(data.getColumnIndex("image_source_id"));
+            mProductImageUri = data.getString(data.getColumnIndex("image_uri"));
             Log.v(LOG_TAG, "value of name in cursor: " + mProductName);
             Log.v(LOG_TAG, "value of quantity in cursor: " + mProductQuantity);
             Log.v(LOG_TAG, "value of price in cursor: " + mProductPrice);
             Log.v(LOG_TAG, "value of supplier in cursor: " + mProductSupplierName);
             Log.v(LOG_TAG, "value of email in cursor: " + mProductSupplierEmail);
-//            Log.v(LOG_TAG, "value of imageSourceId in cursor: " + mProductImageSourceId);
+            Log.v(LOG_TAG, "value of imageSourceId in cursor: " + mProductImageUri);
 
             TextView productNameText = (TextView)
                     findViewById(R.id.detailed_product_name_text);
@@ -428,9 +415,11 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             TextView productSupplierEmailText = (TextView)
                     findViewById(R.id.detailed_product_supplier_email_text);
             productSupplierEmailText.setText(mProductSupplierEmail);
-//
-//            ImageView productImageSourceId = (ImageView) findViewById(R.id.product_image);
-//            productImageSourceId.setImageResource(mProductImageSourceId);
+
+            ImageView productImageSourceId = (ImageView) findViewById(R.id.product_detail_image);
+            Uri testUri = parse(mProductImageUri);
+            Log.v(LOG_TAG, "value of testUri: " + testUri.toString());
+            productImageSourceId.setImageBitmap(getBitMapFromUri(testUri));
         }
 
     }

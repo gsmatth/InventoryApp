@@ -9,9 +9,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.math.BigDecimal;
-import android.icu.text.NumberFormat;
-import android.icu.util.Currency;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,19 +19,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.inventoryapp.data.ProductContract;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 
 import static android.R.attr.id;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 
 /**
@@ -49,7 +42,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mProductQuantity;
     private EditText mProductSupplierName;
     private EditText mProductSupplierEmail;
-    private EditText mProductImageSourceId;
+    private EditText mProductImageUri;
     private EditText mProductPrice;
     private ImageView mProductImageView;
 
@@ -82,7 +75,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mProductQuantity = (EditText) findViewById(R.id.edit_product_current_inventory_quantity_text);
         mProductSupplierName = (EditText) findViewById(R.id.edit_product_supplier_name_text);
         mProductSupplierEmail = (EditText) findViewById(R.id.edit_product_supplier_email_text);
-        mProductImageSourceId = (EditText) findViewById(R.id.edit_product_image_source_id_text);
+        mProductImageUri = (EditText) findViewById(R.id.edit_product_image_source_id_text);
         mProductPrice = (EditText) findViewById(R.id.edit_product_price_text);
         mProductImageView = (ImageView) findViewById(R.id.product_image);
 
@@ -90,7 +83,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mProductQuantity.setOnTouchListener(mTouchListener);
         mProductSupplierName.setOnTouchListener(mTouchListener);
         mProductSupplierEmail.setOnTouchListener(mTouchListener);
-        mProductImageSourceId.setOnTouchListener(mTouchListener);
+        mProductImageUri.setOnTouchListener(mTouchListener);
         mProductPrice.setOnTouchListener(mTouchListener);
 
 
@@ -148,7 +141,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             if(resultData != null){
                 productImageUri = resultData.getData();
                 Log.v(LOG_TAG, "productImageUri value in onActivityResult: " + productImageUri);
-                mProductImageSourceId.setText(productImageUri.toString());
+                mProductImageUri.setText(productImageUri.toString());
                 mProductImageView.setImageBitmap(getBitMapFromUri(productImageUri));
 
             }
@@ -218,7 +211,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     Integer productPrice= Integer.parseInt(mProductPrice.getText().toString().trim());
     String productSupplierName = mProductSupplierName.getText().toString().trim();
     String productSupplierEmail = mProductSupplierEmail.getText().toString().trim();
-    String productImageSourceId = mProductImageSourceId.getText().toString().trim();
+    String productImageUri = mProductImageUri.getText().toString().trim();
 
     ContentValues productValues = new ContentValues();
     productValues.put(ProductEntry.COLUMN_PRODUCT_NAME, productName);
@@ -226,7 +219,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     productValues.put(ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS, productPrice);
     productValues.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, productSupplierName);
     productValues.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, productSupplierEmail);
-    productValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID, productImageSourceId);
+    productValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE_URI, productImageUri);
 
     Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, productValues);
 
@@ -241,7 +234,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        Log.v(LOG_TAG, "etnered onCreateLoader");
+        Log.v(LOG_TAG, "entered onCreateLoader");
 
         String[] projection = {
                 ProductEntry._ID,
@@ -250,7 +243,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS,
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
-                ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID
+                ProductEntry.COLUMN_PRODUCT_IMAGE_URI
 
         };
         switch(id){

@@ -99,7 +99,7 @@ public class ProductProvider extends ContentProvider {
         int price = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS);
         String supplierName = values.getAsString(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
         String supplierEmail = values.getAsString(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
-        String imageSourceId = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE_SOURCE_ID);
+        String imageSourceId = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE_URI);
 
         Log.v(LOG_TAG, "values of values: " + name + ", " + quantity + ", "  + price + ", "
                 + supplierName + ", " + supplierEmail + ", " + imageSourceId);
