@@ -103,17 +103,23 @@ public class ProductProvider extends ContentProvider {
 
         Log.v(LOG_TAG, "values of values: " + name + ", " + quantity + ", "  + price + ", "
                 + supplierName + ", " + supplierEmail + ", " + imageSourceId);
-
-        writeDatabase = mDbHelper.getWritableDatabase();
-        long newRowId = writeDatabase.insert(ProductEntry.TABLE_NAME, null, values);
-
-        if(newRowId == -1){
-            Log.e(LOG_TAG, "Failed to insert row for uri: " + uri);
+        if(name.isEmpty()){
+            Log.v(LOG_TAG, "NAME is null");
             return null;
+        } else {
+
+            writeDatabase = mDbHelper.getWritableDatabase();
+            long newRowId = writeDatabase.insert(ProductEntry.TABLE_NAME, null, values);
+
+            if (newRowId == -1) {
+                Log.e(LOG_TAG, "Failed to insert row for uri: " + uri);
+                return null;
+            }
+            getContext().getContentResolver().notifyChange(uri, null);
+            return ContentUris.withAppendedId(uri, newRowId);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
-        return ContentUris.withAppendedId(uri, newRowId);
     };
+
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {

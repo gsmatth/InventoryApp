@@ -16,8 +16,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-
+import java.math.*;
+import java.text.*;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
+
+import java.util.Locale;
 
 public class InventoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -78,6 +81,11 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
                 startActivity(intent);
             }
         });
+
+
+
+
+
         //calls onCreateLoader on initial load of activity
         getLoaderManager().initLoader(URL_LOADER, null, this);
     }
@@ -139,10 +147,6 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
-
-    }
-
-    private void reduceProductQuantity(){
 
     }
 }

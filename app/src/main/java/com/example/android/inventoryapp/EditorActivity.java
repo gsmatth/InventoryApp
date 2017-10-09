@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,8 +27,14 @@ import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
+import static android.R.attr.data;
 import static android.R.attr.id;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 
 /**
@@ -131,7 +138,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         startActivityForResult(Intent.createChooser(intent, "Select Image"), SELECT_IMAGE_REQUEST);
     }
 
-    //called when photo is clicked on in openImageSelector
+    //called when photo is clicked on in openImageSelector method
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData){
 
@@ -203,34 +210,90 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         return null;
     }
 
+    private void saveProduct() {
 
-    private void saveProduct(){
-    Log.v(LOG_TAG, "entered saveProduct");
-    String productName = mProductName.getText().toString().trim();
-    Integer productQuantity = Integer.parseInt(mProductQuantity.getText().toString().trim());
-    Integer productPrice= Integer.parseInt(mProductPrice.getText().toString().trim());
-    String productSupplierName = mProductSupplierName.getText().toString().trim();
-    String productSupplierEmail = mProductSupplierEmail.getText().toString().trim();
-    String productImageUri = mProductImageUri.getText().toString().trim();
+        List<String> mNullValues = new ArrayList<String>();
+        String joined = "";
+        Log.v(LOG_TAG, "entered saveProduct");
+        String productName = mProductName.getText().toString().trim();
+        Log.v(LOG_TAG, "productName:  " + productName);
 
-    ContentValues productValues = new ContentValues();
-    productValues.put(ProductEntry.COLUMN_PRODUCT_NAME, productName);
-    productValues.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, productQuantity);
-    productValues.put(ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS, productPrice);
-    productValues.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, productSupplierName);
-    productValues.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, productSupplierEmail);
-    productValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE_URI, productImageUri);
+        int productQuantity = 0;
+        int productPrice = 0;
+        try{
+            productQuantity = Integer.parseInt(mProductQuantity.getText().toString().trim());
+        } catch (NumberFormatException e){
+            mNullValues.add("quantity");
+            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
+            joined = TextUtils.join(", ", mNullValues);
+            Log.v(LOG_TAG, "value of string in array, converted to a single string: " + joined);
+        }
 
-    Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, productValues);
+        try{
+            productPrice = Integer.parseInt(mProductPrice.getText().toString().trim());
+        } catch (NumberFormatException e){
+            mNullValues.add("price");
+            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
+            joined = TextUtils.join(", ", mNullValues);
+            Log.v(LOG_TAG, "value of string in array, converted to a single string: " + joined);
+        }
 
-    Log.v(LOG_TAG, "insertProduct() created row with uri:  " + newUri);
-    if(newUri == null){
-        Toast.makeText(this, "Error with saving product, uri is null", Toast.LENGTH_SHORT).show();
-    } else {
-        Toast.makeText(this, "Product saved with uri: " + newUri, Toast.LENGTH_SHORT).show();
+        String productSupplierName = mProductSupplierName.getText().toString().trim();
+        String productSupplierEmail = mProductSupplierEmail.getText().toString().trim();
+        String productImageUri = mProductImageUri.getText().toString().trim();
+        if (productName.isEmpty()) {
+            mNullValues.add("product name");
+
+            Log.v(LOG_TAG, " NO NAME ENTERED ");
+            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
+            joined = TextUtils.join(", ", mNullValues);
+        }
+
+        if (productSupplierName.isEmpty()) {
+            mNullValues.add("supplier name");
+            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
+            joined = TextUtils.join(", ", mNullValues);;
+        }
+
+        if (productSupplierEmail.isEmpty()) {
+            mNullValues.add("supplier email");
+            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
+            joined = TextUtils.join(", ", mNullValues);
+        }
+
+        if (productImageUri.isEmpty()) {
+            mNullValues.add("image uri");
+            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
+            joined = TextUtils.join(", ", mNullValues);
+
+        }
+
+            if(mNullValues.size() > 0){
+                Toast.makeText(this, "The following items are blank and have to be updated before" +
+                                " you can save the new product: " + joined, Toast.LENGTH_LONG).show();
+
+        } else {
+            Log.v(LOG_TAG, "entered else block in saveProduct()");
+
+            ContentValues productValues = new ContentValues();
+            productValues.put(ProductEntry.COLUMN_PRODUCT_NAME, productName);
+            productValues.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, productQuantity);
+            productValues.put(ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS, productPrice);
+            productValues.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, productSupplierName);
+            productValues.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, productSupplierEmail);
+            productValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE_URI, productImageUri);
+
+            Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, productValues);
+
+            Log.v(LOG_TAG, "insertProduct() created row with uri:  " + newUri);
+            if (newUri == null) {
+                Toast.makeText(this, "Error with saving product, uri is null", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Product saved with uri: " + newUri, Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
-
-}
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.ProductContract;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
@@ -71,25 +72,28 @@ public class ProductCursorAdapter  extends CursorAdapter{
         final Uri itemUri = Uri.withAppendedPath(ProductEntry.CONTENT_URI, _id);
 
         Button saleButton = (Button) view.findViewById(R.id.item_product_sale_button);
-        saleButton.setOnClickListener(new View.OnClickListener(){
+        saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 Uri uri = itemUri;
                 int currentQuantity = Integer.parseInt(productQuantity.getText().toString());
                 int reducedQuantity = currentQuantity - 1;
-                ContentValues values = new ContentValues();
-                values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, reducedQuantity);
-                int mRowsUpdated = context.getContentResolver().update(
-                        uri,
-                        values,
-                        null,
-                        null
-                );
+                if (reducedQuantity < 0) {
+                    Toast.makeText(view.getContext(), "The quantitiy of product cannot be less than zero", Toast.LENGTH_LONG).show();
+                } else {
+                    ContentValues values = new ContentValues();
+                    values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, reducedQuantity);
+                    context.getContentResolver().update(
+                            uri,
+                            values,
+                            null,
+                            null
+                    );
+                }
             }
+
+
         });
-
-
-
-    }
+}
 }
 
