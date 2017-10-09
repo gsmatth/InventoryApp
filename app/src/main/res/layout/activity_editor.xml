@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="8dp">
     <LinearLayout
         android:id="@+id/edit_product_name"
         android:layout_width="match_parent"
@@ -47,7 +50,7 @@
             android:id="@+id/edit_product_price_text"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:inputType="number"/>
+            android:inputType="numberDecimal"/>
     </LinearLayout>
 
     <LinearLayout
@@ -123,12 +126,12 @@
                     android:id="@+id/select_product_image_button"
                     android:layout_width="100dp"
                     android:layout_height="80dp"
-                    android:text="Select Product Image"/>
+                    android:text="@string/select_product_image_button"/>
             <Button
                 android:id="@+id/add_new_product_button"
                 android:layout_width="100dp"
              android:layout_height="100dp"
-                android:text="add product to database"/>
+                android:text="@string/add_product_to_databse_button"/>
     </LinearLayout>
     </LinearLayout>
 

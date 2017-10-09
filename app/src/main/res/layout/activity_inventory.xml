@@ -5,54 +5,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="12dp"
     tools:context="com.example.android.inventoryapp.InventoryActivity">
 
     <LinearLayout
         android:id="@+id/product_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+
         <TextView
             android:id="@+id/product_name_header"
-            android:layout_width="150dp"
+            android:layout_width="136dp"
             android:layout_height="wrap_content"
             android:text="@string/product_name_header"
-            />
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/product_quantitiy_header"
-            android:layout_width="50dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:text="@string/product_quantity_header"/>
+            android:layout_marginRight="6dp"
+            android:text="@string/product_quantity_header"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/edit_product_price_header"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
-            android:text="@string/product_price_header"/>
+            android:text="@string/product_price_header"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
+
     <TextView
         android:id="@+id/empty_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No Product entered, add some"/>
+        android:text="@string/inventory_activity_empty_view" />
+
     <ListView
         android:id="@+id/product_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:layout_marginTop="16dp">
-    </ListView>
+        android:layout_marginBottom="64dp"
+        android:layout_marginTop="16dp"></ListView>
+
     <Button
         android:id="@+id/add_new_product_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="54dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
-        android:text="@string/add_new_product"
-        android:layout_marginTop="8dp" />
+        android:layout_centerInParent="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/add_new_product" />
+
 
 </RelativeLayout>

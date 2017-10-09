@@ -18,7 +18,7 @@
         <activity
             android:name=".EditorActivity"
             android:parentActivityName=".InventoryActivity"
-            android:label="Edit Product">
+            android:label="Add New Product">
             <meta-data
                 android:name="android.support.annotation.PARENT_ACTIVITY"
                 android:value=".InventoryActivity"/>
