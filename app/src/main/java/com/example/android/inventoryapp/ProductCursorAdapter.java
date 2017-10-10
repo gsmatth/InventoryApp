@@ -24,12 +24,12 @@ import java.util.Locale;
  * Created by djp on 9/20/17.
  */
 
-public class ProductCursorAdapter  extends CursorAdapter{
+public class ProductCursorAdapter extends CursorAdapter {
 
     public static final String LOG_TAG = ProductCursorAdapter.class.getSimpleName();
 
 
-    public ProductCursorAdapter(Context context, Cursor cursor){
+    public ProductCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
     }
 
@@ -44,10 +44,11 @@ public class ProductCursorAdapter  extends CursorAdapter{
      * This method binds the product data(in the row being pointed to in the cursor)
      * to the given list item layout.  For example, the name of the current product can be set on
      * the "item_product_name" text view in the list item layout
-     * @param view          existing view
-     * @param context       app context
-     * @param cursor        The cursor from which to get the data.  The cursor is already  moved
-     *                      to the correct row
+     *
+     * @param view    existing view
+     * @param context app context
+     * @param cursor  The cursor from which to get the data.  The cursor is already  moved
+     *                to the correct row
      */
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
@@ -59,15 +60,9 @@ public class ProductCursorAdapter  extends CursorAdapter{
 
         String name = cursor.getString(cursor.getColumnIndex("name"));
         final String quantity = cursor.getString(cursor.getColumnIndex("quantity"));
-//        String price = cursor.getString(cursor.getColumnIndex("price"));
-//        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.getDefault());
         Float price = cursor.getFloat(cursor.getColumnIndex("price"));
-        Float priceFloat = (Float.valueOf(price)/100);
+        Float priceFloat = (Float.valueOf(price) / 100);
         String currencyString = String.format("%.2f", priceFloat);
-//        String currencyString = Float.toString(priceFloat);
-        Log.v(LOG_TAG, "value of priceFloat shoudl be a float: " + priceFloat);
-        Log.v(LOG_TAG, "value of currencyString should be a string: " +currencyString);
-//        Float priceInDollars = priceFloat/100;
         String _id = cursor.getString(cursor.getColumnIndex("_id"));
 
         productName.setText(name);
@@ -80,7 +75,7 @@ public class ProductCursorAdapter  extends CursorAdapter{
          *   AND
          * https://stackoverflow.com/questions/15941374/how-do-i-call-onclick-listener-of-a-
          * button-which-resides-in-listview-item?rq=1
-*/
+         */
         final Uri itemUri = Uri.withAppendedPath(ProductEntry.CONTENT_URI, _id);
 
         Button saleButton = (Button) view.findViewById(R.id.item_product_sale_button);
@@ -106,6 +101,6 @@ public class ProductCursorAdapter  extends CursorAdapter{
 
 
         });
-}
+    }
 }
 

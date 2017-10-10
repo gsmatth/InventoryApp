@@ -16,8 +16,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
 import java.math.*;
 import java.text.*;
+
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
 import java.util.Locale;
@@ -43,7 +45,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         mCursorAdapter = new ProductCursorAdapter(this, null);
         productItems.setAdapter(mCursorAdapter);
 
-        productItems.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        productItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             /**
              *solved issue with method not being called by using solution highlighted in:
              * https://stackoverflow.com/questions/2098558/listview-with-clickable-editable-widget
@@ -74,16 +76,13 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         });
 
         Button addNewProductButton = (Button) findViewById(R.id.add_new_product_button);
-        addNewProductButton.setOnClickListener(new View.OnClickListener(){
+        addNewProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
-                    public void onClick(View view){
+            public void onClick(View view) {
                 Intent intent = new Intent(InventoryActivity.this, EditorActivity.class);
                 startActivity(intent);
             }
         });
-
-
-
 
 
         //calls onCreateLoader on initial load of activity
@@ -95,9 +94,10 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
      * it queries through the ContentResolver to the ProductProvider.query().  Upon completion
      * of the query, the LoaderManager calls the onLoadFInished and passes the Cursor with
      * the returned data
-     * @param id            the row id of the cursor
+     *
+     * @param id   the row id of the cursor
      * @param args
-     * @return              Cursor object with data or null if no row id passed in
+     * @return Cursor object with data or null if no row id passed in
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -112,7 +112,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
                 ProductEntry.COLUMN_PRODUCT_IMAGE_URI
         };
-        switch(id){
+        switch (id) {
             case URL_LOADER:
                 return new CursorLoader(
                         this,
@@ -130,8 +130,9 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
     /**
      * data, in the form of a Cursor, is passed in from CursorLoader created in onCreateLoader above.
      * That data is passed to the CursorAdapter, which interacts with the UI to update view of data.
-     * @param loader        CursorLoader created in onCreateLoader
-     * @param data          Cursor object with data
+     *
+     * @param loader CursorLoader created in onCreateLoader
+     * @param data   Cursor object with data
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
@@ -142,6 +143,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
 
     /**
      * clears out adapter refence to the data (Cursor), which prevents memory leaks
+     *
      * @param loader
      */
     @Override
