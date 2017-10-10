@@ -35,8 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 ;
 import static android.R.attr.id;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 
 
 /**
@@ -66,15 +65,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            Log.v(LOG_TAG, "onTouch in onTouchListener called");
             mProductHasChanged = true;
-            Log.v(LOG_TAG, "value of mProductHaschanged in onTouch: " + mProductHasChanged);
             return false;
         }
     };
 
     protected void onCreate(Bundle savedInstanceState) {
-        Log.v(LOG_TAG, "entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         Intent intent = getIntent();
@@ -101,35 +97,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         selectProductImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(LOG_TAG, "selectProductImageButton onClick called");
                 openImageSelector();
             }
         });
-
-
-        /**
-         * code snippet from Markus Eisele http://blog.eisele.net/2011/08/working-with-money-in-java.html
-         */
-//        double price = 100.12;
-//        BigDecimal result2 = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP);
-//        NumberFormat priceFormatted = NumberFormat.getCurrencyInstance(new Locale("usd"));
-//        Log.v(LOG_TAG, "Amont formated into dollars: " + priceFormatted.format(result2));
-//        Currency dollarFormatter = Currency.getInstance().getSymbol();
 
         Button addNewProductButton = (Button) findViewById(R.id.add_new_product_button);
         addNewProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(LOG_TAG, "entered onClick, calling saveProduct method");
                 saveProduct();
             }
         });
     }
 
 
-    //method creates dialog box when edit/changes occur but are not saved yet
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
-        Log.v(LOG_TAG, "entered showUnsavedChangesDialog method");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
@@ -145,23 +127,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         alertDialog.show();
     }
 
-    //attribution: https://stackoverflow.com/questions/27045551/why-is-onbackpressed-not-being-called
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
-            // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
-                // If the pet hasn't changed, continue with navigating up to parent activity
-                // which is the {@link CatalogActivity}.
                 if (!mProductHasChanged) {
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
                     return true;
                 }
-                // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-                // Create a click listener to handle the user confirming that
-                // changes should be discarded.
                 DialogInterface.OnClickListener discardButtonClickListener =
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -170,8 +143,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                                 NavUtils.navigateUpFromSameTask(EditorActivity.this);
                             }
                         };
-
-                // Show a dialog that notifies the user they have unsaved changes
                 showUnsavedChangesDialog(discardButtonClickListener);
                 return true;
         }
@@ -179,18 +150,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     public void openImageSelector() {
-        Log.v(LOG_TAG, "entered openImageSelector");
         Intent intent;
         if (Build.VERSION.SDK_INT < 19) {
-            Log.v(LOG_TAG, "using sdk < 19");
             intent = new Intent(Intent.ACTION_GET_CONTENT);
         } else {
-            Log.v(LOG_TAG, "using sdk >= 19");
             intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
         }
         intent.setType("image/*");
-        Log.v(LOG_TAG, "calling startActivity");
         startActivityForResult(Intent.createChooser(intent, "Select Image"), SELECT_IMAGE_REQUEST);
     }
 
@@ -198,35 +165,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
 
-        Log.v(LOG_TAG, "entered onActivityResults");
         if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            Log.v(LOG_TAG, "value of resultData: " + resultData.getData());
             if (resultData != null) {
                 productImageUri = resultData.getData();
-                Log.v(LOG_TAG, "productImageUri value in onActivityResult: " + productImageUri);
                 mProductImageUri.setText(productImageUri.toString());
                 mProductImageView.setImageBitmap(getBitMapFromUri(productImageUri));
-
             }
         }
     }
 
     public Bitmap getBitMapFromUri(Uri productImageUri) {
 
-        Log.v(LOG_TAG, "entered getBitMapFromUri");
-//
         if (productImageUri == null || productImageUri.toString().isEmpty()) {
-            Log.v(LOG_TAG, "productImageUri is null or is empty");
             return null;
         }
-//
+
         int targetW = mProductImageView.getWidth();
         int targetH = mProductImageView.getHeight();
-//        return null;
-//
+
         InputStream input = null;
         try {
-            Log.v(LOG_TAG, "entered try block");
             input = this.getContentResolver().openInputStream(productImageUri);
             BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
             bitmapOptions.inJustDecodeBounds = true;
@@ -262,7 +220,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             } catch (IOException e) {
             }
         }
-        Log.e(LOG_TAG, "getting ready to return null at end of getBitmapfromUri");
         return null;
     }
 
@@ -270,9 +227,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         List<String> mNullValues = new ArrayList<String>();
         String joined = "";
-        Log.v(LOG_TAG, "entered saveProduct");
         String productName = mProductName.getText().toString().trim();
-        Log.v(LOG_TAG, "productName:  " + productName);
 
         int productQuantity = 0;
         int productPrice = 0;
@@ -280,18 +235,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             productQuantity = Integer.parseInt(mProductQuantity.getText().toString().trim());
         } catch (NumberFormatException e) {
             mNullValues.add("quantity");
-            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
             joined = TextUtils.join(", ", mNullValues);
-            Log.v(LOG_TAG, "value of string in array, converted to a single string: " + joined);
         }
 
         try {
             productPrice = Integer.parseInt(mProductPrice.getText().toString().trim());
         } catch (NumberFormatException e) {
             mNullValues.add("price");
-            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
             joined = TextUtils.join(", ", mNullValues);
-            Log.v(LOG_TAG, "value of string in array, converted to a single string: " + joined);
         }
 
         String productSupplierName = mProductSupplierName.getText().toString().trim();
@@ -299,28 +250,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String productImageUri = mProductImageUri.getText().toString().trim();
         if (productName.isEmpty()) {
             mNullValues.add("product name");
-
-            Log.v(LOG_TAG, " NO NAME ENTERED ");
-            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
             joined = TextUtils.join(", ", mNullValues);
         }
 
         if (productSupplierName.isEmpty()) {
             mNullValues.add("supplier name");
-            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
             joined = TextUtils.join(", ", mNullValues);
-            ;
         }
 
         if (productSupplierEmail.isEmpty()) {
             mNullValues.add("supplier email");
-            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
             joined = TextUtils.join(", ", mNullValues);
         }
 
         if (productImageUri.isEmpty()) {
             mNullValues.add("image uri");
-            Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
             joined = TextUtils.join(", ", mNullValues);
 
         }
@@ -330,8 +274,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     " you can save the new product: " + joined, Toast.LENGTH_LONG).show();
 
         } else {
-            Log.v(LOG_TAG, "entered else block in saveProduct()");
-
             ContentValues productValues = new ContentValues();
             productValues.put(ProductEntry.COLUMN_PRODUCT_NAME, productName);
             productValues.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, productQuantity);
@@ -342,7 +284,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, productValues);
 
-            Log.v(LOG_TAG, "insertProduct() created row with uri:  " + newUri);
             if (newUri == null) {
                 Toast.makeText(this, "Error with saving product, uri is null", Toast.LENGTH_SHORT).show();
             } else {
@@ -354,7 +295,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        Log.v(LOG_TAG, "entered onCreateLoader");
 
         String[] projection = {
                 ProductEntry._ID,
@@ -383,7 +323,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v(LOG_TAG, "entered onLoadFinished");
         if (data.moveToFirst()) {
             data.moveToFirst();
             String mProductName = data.getString(data.getColumnIndex("name"));
