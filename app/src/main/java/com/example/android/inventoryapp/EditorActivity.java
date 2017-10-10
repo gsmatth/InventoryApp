@@ -9,6 +9,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.util.Currency;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import java.util.Locale;
 import static android.R.attr.data;
 import static android.R.attr.id;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static java.lang.Float.parseFloat;
 
 
 /**
@@ -111,6 +113,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 //        BigDecimal result2 = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP);
 //        NumberFormat priceFormatted = NumberFormat.getCurrencyInstance(new Locale("usd"));
 //        Log.v(LOG_TAG, "Amont formated into dollars: " + priceFormatted.format(result2));
+//        Currency dollarFormatter = Currency.getInstance().getSymbol();
 
         Button addNewProductButton = (Button) findViewById(R.id.add_new_product_button);
         addNewProductButton.setOnClickListener(new View.OnClickListener(){

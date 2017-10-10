@@ -51,7 +51,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 
     private String mProductName;
     private Integer mProductQuantity;
-    private Integer mProductPrice;
+    private Float mProductPrice;
     private String mProductSupplierName;
     private String mProductSupplierEmail;
     private String mProductImageUri;
@@ -350,14 +350,9 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             data.moveToFirst();
             mProductName = data.getString(data.getColumnIndex("name"));
             mProductQuantity = data.getInt(data.getColumnIndex("quantity"));
-            mProductPrice = data.getInt(data.getColumnIndex("price"));
-//            double price = 100.12;
-            BigDecimal productPriceDecimal = new BigDecimal(mProductPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
-            NumberFormat productPriceFormatted = NumberFormat.getCurrencyInstance(new Locale("usd"));
-            String formattedPrice = productPriceFormatted.format(productPriceDecimal);
-            Log.v(LOG_TAG, "formattedPrice:  " + formattedPrice);
-
-
+            mProductPrice = data.getFloat(data.getColumnIndex("price"));
+            Float priceFloat = (Float.valueOf(mProductPrice/100));
+            String currencyString = String.format("%.2f", priceFloat);
 
 
             mProductSupplierName = data.getString(data.getColumnIndex("supplier"));
@@ -365,7 +360,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             mProductImageUri = data.getString(data.getColumnIndex("image_uri"));
             Log.v(LOG_TAG, "value of name in cursor: " + mProductName);
             Log.v(LOG_TAG, "value of quantity in cursor: " + mProductQuantity);
-            Log.v(LOG_TAG, "value of price in cursor: " + mProductPrice);
+            Log.v(LOG_TAG, "value of price in cursor: " + currencyString);
             Log.v(LOG_TAG, "value of supplier in cursor: " + mProductSupplierName);
             Log.v(LOG_TAG, "value of email in cursor: " + mProductSupplierEmail);
             Log.v(LOG_TAG, "value of imageSourceId in cursor: " + mProductImageUri);
@@ -381,7 +376,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             TextView productPriceText = (TextView)
                     findViewById(R.id.detailed_product_price_text);
 //            productPriceText.setText(String.valueOf(mProductPrice));
-            productPriceText.setText(formattedPrice);
+            productPriceText.setText("$" + currencyString);
 
             TextView productSupplierNameText = (TextView)
                     findViewById(R.id.detailed_product_supplier_name_text);

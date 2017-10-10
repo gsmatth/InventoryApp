@@ -3,7 +3,9 @@ package com.example.android.inventoryapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.icu.text.NumberFormat;
 import android.net.Uri;
+import android.util.FloatProperty;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.ProductContract;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
+
+import java.util.Locale;
 
 /**
  * Created by djp on 9/20/17.
@@ -55,12 +59,20 @@ public class ProductCursorAdapter  extends CursorAdapter{
 
         String name = cursor.getString(cursor.getColumnIndex("name"));
         final String quantity = cursor.getString(cursor.getColumnIndex("quantity"));
-        String price = cursor.getString(cursor.getColumnIndex("price"));
+//        String price = cursor.getString(cursor.getColumnIndex("price"));
+//        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.getDefault());
+        Float price = cursor.getFloat(cursor.getColumnIndex("price"));
+        Float priceFloat = (Float.valueOf(price)/100);
+        String currencyString = String.format("%.2f", priceFloat);
+//        String currencyString = Float.toString(priceFloat);
+        Log.v(LOG_TAG, "value of priceFloat shoudl be a float: " + priceFloat);
+        Log.v(LOG_TAG, "value of currencyString should be a string: " +currencyString);
+//        Float priceInDollars = priceFloat/100;
         String _id = cursor.getString(cursor.getColumnIndex("_id"));
 
         productName.setText(name);
         productQuantity.setText(quantity);
-        productPrice.setText(price);
+        productPrice.setText("$" + currencyString);
 
         /**the saleButton functionality was accomplished with the assistance of:
          *

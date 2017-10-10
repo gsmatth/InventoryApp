@@ -4,6 +4,7 @@
     <string name="product_name_header">Name:</string>
     <string name="product_price_header">Price:</string>
     <string name="product_quantity_header">Quantity:</string>
+    <string name="product_price_in_cents_header">Price In Cents:</string>
     <string name="add_new_product">Add New Product</string>
     <string name="increase_item_quantity">Increase Quantity</string>
     <string name="decrease_item_quantity">Decrease Quantity</string>
@@ -17,7 +18,7 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="select_product_image_button">Select Product Image</string>
-    <string name="add_product_to_databse_button">Add Product To Database</string>
+    <string name="add_product_to_database_button">Add Product To Database</string>
     <string name="inventory_activity_empty_view">There are no saved products.
         Click on ADD NEW PRODUCTS button below to start adding new products.</string>
 </resources>
