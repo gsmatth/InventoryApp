@@ -125,18 +125,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
     }
-    
+
 
     //method creates dialog box when edit/changes occur but are not saved yet
-    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener){
+    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
         Log.v(LOG_TAG, "entered showUnsavedChangesDialog method");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
-        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int id){
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 //user clicked "Keep Editing" button so dismiss dialog and keep editing
-                if(dialog != null){
+                if (dialog != null) {
                     dialog.dismiss();
                 }
             }
@@ -144,6 +144,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
+    //attribution: https://stackoverflow.com/questions/27045551/why-is-onbackpressed-not-being-called
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

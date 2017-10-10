@@ -7,22 +7,22 @@
 
     <TextView
         android:id="@+id/item_product_name"
-        android:layout_width="150dp"
+        android:layout_width="@dimen/product_header_width"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/item_product_quantity"
-        android:layout_width="64dp"
+        android:layout_width="@dimen/item_product_quantity_width"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/item_product_price"
-        android:layout_width="75dp"
+        android:layout_width="@dimen/item_product_price_width"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/item_product_sale_button"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="@dimen/item_product_sale_button_width"
+        android:layout_height="@dimen/item_product_sale_button_height"
         android:text="@string/product_sale_button_text" />
 </LinearLayout>

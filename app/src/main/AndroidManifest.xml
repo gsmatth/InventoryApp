@@ -17,29 +17,30 @@
         </activity>
         <activity
             android:name=".EditorActivity"
-            android:parentActivityName=".InventoryActivity"
-            android:label="Add New Product">
+            android:label="Add New Product"
+            android:parentActivityName=".InventoryActivity">
             <meta-data
                 android:name="android.support.annotation.PARENT_ACTIVITY"
-                android:value=".InventoryActivity"/>
+                android:value=".InventoryActivity" />
         </activity>
         <activity
             android:name=".ProductDetailActivity"
-            android:parentActivityName=".InventoryActivity"
-            android:label="Product Detail">
+            android:label="Product Detail"
+            android:parentActivityName=".InventoryActivity">
             <meta-data
                 android:name=".android.support.annotation.PARENT_ACTIVITY"
-                android:value=".InventoryActivity"/>
+                android:value=".InventoryActivity" />
             <intent-filter>
-                <action android:name="android.intent.action.SENDTO"/>
-                <data android:scheme="mailto"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.SENDTO" />
+                <data android:scheme="mailto" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <provider
-            android:authorities="com.example.android.inventoryapp"
             android:name=".data.ProductProvider"
-            android:exported="false"/>
+            android:authorities="com.example.android.inventoryapp"
+            android:exported="false" />
 
     </application>
 
