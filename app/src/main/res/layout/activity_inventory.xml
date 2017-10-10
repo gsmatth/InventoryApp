@@ -21,27 +21,27 @@
 
         <TextView
             android:id="@+id/product_name_header"
-            android:layout_width="136dp"
+            android:layout_width="@dimen/product_name_header_width"
             android:layout_height="wrap_content"
             android:text="@string/product_name_header"
-            android:textSize="16sp"
+            android:textSize="@dimen/header_text_size"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/product_quantitiy_header"
-            android:layout_width="70dp"
+            android:layout_width="@dimen/product_quantity_header_width"
             android:layout_height="wrap_content"
-            android:layout_marginRight="6dp"
+            android:layout_marginRight="@dimen/quantity_header_margin_right"
             android:text="@string/product_quantity_header"
-            android:textSize="16sp"
+            android:textSize="@dimen/header_text_size"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/edit_product_price_header"
-            android:layout_width="75dp"
+            android:layout_width="@dimen/product_price_header_width"
             android:layout_height="wrap_content"
             android:text="@string/product_price_header"
-            android:textSize="16sp"
+            android:textSize="@dimen/header_text_size"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -54,18 +54,15 @@
 
     <ListView
         android:id="@+id/product_listview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        android:layout_marginTop="16dp"></ListView>
+        style="@style/ProductListView"></ListView>
 
     <Button
         android:id="@+id/add_new_product_button"
         android:layout_width="wrap_content"
-        android:layout_height="54dp"
+        android:layout_height="@dimen/inventory_add_new_product_button_height"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/inventory_add_new_product_button_margin_top"
         android:text="@string/add_new_product" />
 
 

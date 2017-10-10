@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="header_text_size">16sp</dimen>
+    <dimen name="product_detail_text_size">16sp</dimen>
+    <dimen name="app_padding_left">8dp</dimen>
+    <dimen name="app_padding_right">8dp</dimen>
+    <dimen name="app_padding_top">8dp</dimen>
+    <dimen name="product_header_width">150dp</dimen>
+    <dimen name="product_text_width">200dp</dimen>
+    <dimen name="image_width">250dp</dimen>
+    <dimen name="image_height">250dp</dimen>
+    <dimen name="margin_bottom">12dp</dimen>
+    <dimen name="margin_top">8dp</dimen>
+    <dimen name="select_image_button_width">100dp</dimen>
+    <dimen name="select_image_button_height">80dp</dimen>
+    <dimen name="add_new_product_button_width">100dp</dimen>
+    <dimen name="add_new_product_button_height">100dp</dimen>
+    <dimen name="product_name_header_width">136dp</dimen>
+    <dimen name="product_quantity_header_width">70dp</dimen>
+    <dimen name="product_price_header_width">75dp</dimen>
+    <dimen name="quantity_header_margin_right">6dp</dimen>
+    <dimen name="inventory_add_new_product_button_height">54dp</dimen>
+    <dimen name="inventory_add_new_product_button_margin_top">16dp</dimen>
+    <dimen name="item_product_quantity_width">64dp</dimen>
+    <dimen name="item_product_price_width">75dp</dimen>
+    <dimen name="item_product_sale_button_width">75dp</dimen>
+    <dimen name="item_product_sale_button_height">75dp</dimen>
+</resources>

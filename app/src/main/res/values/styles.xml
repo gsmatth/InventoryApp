@@ -9,16 +9,30 @@
     </style>
 
     <style name="ProductDetailHeader">
-        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_width">@dimen/product_header_width</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/header_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ProductDetailText">
-        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_width">@dimen/product_text_width</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/product_detail_text_size</item>
+    </style>
+
+    <style name="ProductDetailImage">
+        <item name="android:layout_width">@dimen/image_width</item>
+        <item name="android:layout_height">@dimen/image_height</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="ProductListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">64dp</item>
+        <item name="android:layout_marginTop">16dp</item>
     </style>
 
 </resources>

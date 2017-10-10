@@ -21,4 +21,7 @@
     <string name="add_product_to_database_button">Add Product To Database</string>
     <string name="inventory_activity_empty_view">There are no saved products.
         Click on ADD NEW PRODUCTS button below to start adding new products.</string>
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
 </resources>
