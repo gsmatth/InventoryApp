@@ -44,7 +44,6 @@ public class ProductProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        Log.v(LOG_TAG, "entered query method");
 
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
 
@@ -92,19 +91,14 @@ public class ProductProvider extends ContentProvider {
     }
 
     private Uri insertProduct(Uri uri, ContentValues values) {
-        Log.v(LOG_TAG, "entered insertProducts method");
         String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
-        Log.v(LOG_TAG, "insertProduct name value: " + name);
         int quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
         int price = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_PRICE_IN_CENTS);
         String supplierName = values.getAsString(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
         String supplierEmail = values.getAsString(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
         String imageSourceId = values.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE_URI);
 
-        Log.v(LOG_TAG, "values of values: " + name + ", " + quantity + ", " + price + ", "
-                + supplierName + ", " + supplierEmail + ", " + imageSourceId);
         if (name.isEmpty()) {
-            Log.v(LOG_TAG, "NAME is null");
             return null;
         } else {
 
@@ -122,7 +116,6 @@ public class ProductProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        Log.v(LOG_TAG, "entered delete method in ProductProvider");
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PRODUCTS:
@@ -150,7 +143,6 @@ public class ProductProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection,
                       @Nullable String[] selectionArgs) {
-        Log.v(LOG_TAG, "entered update in ProductProvider");
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PRODUCTS:
@@ -166,12 +158,9 @@ public class ProductProvider extends ContentProvider {
     }
 
     private int updateProduct(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        Log.v(LOG_TAG, "entered updateProduct in ProductProvider");
         writeDatabase = mDbHelper.getWritableDatabase();
         int numberOfRowsUpdated = writeDatabase.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
-        Log.v(LOG_TAG, "number of rows updated by updateProduct method:  " + numberOfRowsUpdated);
         if (numberOfRowsUpdated > 0) {
-            Log.v(LOG_TAG, "calling notifyChange method in updateProduct");
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return numberOfRowsUpdated;

@@ -3,10 +3,7 @@ package com.example.android.inventoryapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.icu.text.NumberFormat;
 import android.net.Uri;
-import android.util.FloatProperty;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +15,6 @@ import android.widget.Toast;
 import com.example.android.inventoryapp.data.ProductContract;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
-import java.util.Locale;
 
 /**
  * Created by djp on 9/20/17.
@@ -33,10 +29,8 @@ public class ProductCursorAdapter extends CursorAdapter {
         super(context, cursor, 0);
     }
 
-
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        Log.v(LOG_TAG, "entered View constructor in ProductCursorAdapter");
         return LayoutInflater.from(context).inflate(R.layout.item_product, parent, false);
     }
 
@@ -52,7 +46,6 @@ public class ProductCursorAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
-        Log.v(LOG_TAG, "entered bindView in ProductCursorAdapter");
 
         TextView productName = view.findViewById(R.id.item_product_name);
         final TextView productQuantity = view.findViewById(R.id.item_product_quantity);
@@ -69,13 +62,6 @@ public class ProductCursorAdapter extends CursorAdapter {
         productQuantity.setText(quantity);
         productPrice.setText("$" + currencyString);
 
-        /**the saleButton functionality was accomplished with the assistance of:
-         *
-         * https://discussions.udacity.com/t/how-to-implement-sale-button/344691/10
-         *   AND
-         * https://stackoverflow.com/questions/15941374/how-do-i-call-onclick-listener-of-a-
-         * button-which-resides-in-listview-item?rq=1
-         */
         final Uri itemUri = Uri.withAppendedPath(ProductEntry.CONTENT_URI, _id);
 
         Button saleButton = (Button) view.findViewById(R.id.item_product_sale_button);

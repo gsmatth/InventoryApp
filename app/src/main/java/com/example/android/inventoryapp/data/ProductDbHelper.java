@@ -3,7 +3,6 @@ package com.example.android.inventoryapp.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import static com.example.android.inventoryapp.data.ProductContract.ProductEntry.SQL_CREATE_PRODUCTS_TABLE;
 import static com.example.android.inventoryapp.data.ProductContract.ProductEntry.SQL_DELETE_PRODUCT_TABLE;

@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -30,9 +29,6 @@ import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 import static android.net.Uri.parse;
 
@@ -62,12 +58,10 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
     private Uri productImageUri;
 
     public void onCreate(Bundle savedInstanceState) {
-        Log.v(LOG_TAG, "entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_product);
         Intent intent = getIntent();
         currentProductUri = intent.getData();
-        Log.v(LOG_TAG, "value of currentProductUri should not be null:  " + currentProductUri);
         productImageView = (ImageView) findViewById(R.id.product_detail_image);
 
 
@@ -75,7 +69,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
         increaseQuantityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(LOG_TAG, "called onClickListener for increase quantity button");
                 int numberOfRowsUpdated = increaseProductQuantity(currentProductUri);
             }
         });
@@ -84,7 +77,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
         decreaseQuantityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(LOG_TAG, "called onClickListener for increase quantity button");
                 int numberOfRowsUpdated = decreaseProductQuantity(currentProductUri);
             }
         });
@@ -94,7 +86,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
             @Override
             public void onClick(View view) {
                 showDeleteConfirmationDialog();
-                Log.v(LOG_TAG, "entered onClick for deleteProductButton");
             }
         });
 
@@ -116,14 +107,10 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
     ;
 
     private void showDeleteConfirmationDialog() {
-        Log.v(LOG_TAG, " entered showDeleteConfirmationDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        Log.v(LOG_TAG, "row 1");
-        builder.setMessage(R.string.delete_product_dialog_msg);
-        Log.v(LOG_TAG, "row2");
+        builder.setMessage(R.string.delete_product_dialog_msg);;
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Log.v(LOG_TAG, "entered onCLick in showDeleteConfirmationDIalog");
                 deleteProduct(currentProductUri);
             }
         });
@@ -131,7 +118,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                Log.v(LOG_TAG, "enterd dialog dismiss in setNegativeButton");
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -142,7 +128,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
     }
 
     private void orderProduct(View view) {
-        Log.v(LOG_TAG, "entered orderProduct method");
         TextView productNameView = (TextView) findViewById(R.id.detailed_product_name_text);
         String productName = productNameView.getText().toString().trim();
         TextView supplierEmailView = (TextView) findViewById(R.id.detailed_product_supplier_email_text);
@@ -153,12 +138,10 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
         String emailBody = "Please respond to this email address with an estimate of the cost " +
                 "to purchase one " + productName + ". The estimate should include any applicable " +
                 "sales tax and shipping costs.";
-        Log.v(LOG_TAG, "email body: " + emailBody);
         composeEmail(addresses, ccAddresses, subject, emailBody);
     }
 
     public void composeEmail(String[] addresses, String[] ccAddresses, String subject, String emailBody) {
-        Log.v(LOG_TAG, "entered compose email method");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(parse("mailto:"));
         intent.putExtra(Intent.EXTRA_EMAIL, addresses);
@@ -173,12 +156,9 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
     }
 
     private int increaseProductQuantity(Uri uri) {
-        Log.v(LOG_TAG, "entered increaseProductQuantity");
         TextView currentQuantityView = (TextView) findViewById(R.id.detailed_product_current_inventory_text);
         int currentQuantity = Integer.parseInt(currentQuantityView.getText().toString());
-        Log.v(LOG_TAG, "value of current quantity as integer: " + currentQuantity);
         int newQuantity = currentQuantity + 1;
-        Log.v(LOG_TAG, "value of new quantity as an int: " + newQuantity);
 
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
@@ -193,27 +173,21 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
     }
 
     private int deleteProduct(Uri uri) {
-        Log.v(LOG_TAG, "entered deleteProduct");
         int mRowsDeleted = getContentResolver().delete(
                 uri,
                 null,
                 null);
-        Log.v(LOG_TAG, "value of mRowsDeleted returned to  deleteProducts mehtod: " + mRowsDeleted);
         return mRowsDeleted;
     }
 
     private int decreaseProductQuantity(Uri uri) {
         int mRowsUpdated = 0;
-        Log.v(LOG_TAG, "entered increaseProductQuantity");
         TextView currentQuantityView = (TextView) findViewById(R.id.detailed_product_current_inventory_text);
         int currentQuantity = Integer.parseInt(currentQuantityView.getText().toString());
-        Log.v(LOG_TAG, "value of current quantity as integer: " + currentQuantity);
         int newQuantity = currentQuantity - 1;
         if (newQuantity < 0) {
             Toast.makeText(this, "The quantity can not be less than zero", Toast.LENGTH_LONG).show();
         } else {
-            Log.v(LOG_TAG, "value of new quantity as an int: " + newQuantity);
-
             ContentValues values = new ContentValues();
             values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
 
@@ -229,10 +203,7 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
 
     public Bitmap getBitMapFromUri(Uri productImageUri) {
 
-        Log.v(LOG_TAG, "entered getBitMapFromUri");
-
         if (productImageUri == null || productImageUri.toString().isEmpty()) {
-            Log.v(LOG_TAG, "productImageUri is null or is empty");
             return null;
         }
 
@@ -241,7 +212,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
 
         InputStream input = null;
         try {
-            Log.v(LOG_TAG, "entered try block");
             input = this.getContentResolver().openInputStream(productImageUri);
             BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
             bitmapOptions.inJustDecodeBounds = true;
@@ -280,7 +250,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
             } catch (IOException e) {
             }
         }
-        Log.e(LOG_TAG, "getting ready to return null at end of getBitmapfromUri");
         return null;
     }
 
@@ -296,7 +265,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.v(LOG_TAG, "entered onCreateLoader");
         String[] projection = {
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
@@ -330,8 +298,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v(LOG_TAG, "entered onLoadFinished");
-        Log.v(LOG_TAG, "value of cursor: " + data);
         if (data.moveToFirst()) {
             data.moveToFirst();
             mProductName = data.getString(data.getColumnIndex("name"));
@@ -344,12 +310,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
             mProductSupplierName = data.getString(data.getColumnIndex("supplier"));
             mProductSupplierEmail = data.getString(data.getColumnIndex("supplier_email"));
             mProductImageUri = data.getString(data.getColumnIndex("image_uri"));
-            Log.v(LOG_TAG, "value of name in cursor: " + mProductName);
-            Log.v(LOG_TAG, "value of quantity in cursor: " + mProductQuantity);
-            Log.v(LOG_TAG, "value of price in cursor: " + currencyString);
-            Log.v(LOG_TAG, "value of supplier in cursor: " + mProductSupplierName);
-            Log.v(LOG_TAG, "value of email in cursor: " + mProductSupplierEmail);
-            Log.v(LOG_TAG, "value of imageSourceId in cursor: " + mProductImageUri);
 
             TextView productNameText = (TextView)
                     findViewById(R.id.detailed_product_name_text);
@@ -387,7 +347,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.v(LOG_TAG, "entered onLoadReset");
         TextView productNameText = (TextView)
                 findViewById(R.id.detailed_product_name_text);
         productNameText.setText("");
@@ -408,10 +367,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
                 findViewById(R.id.detailed_product_supplier_email_text);
         productSupplierEmailText.setText("");
 
-        /**
-         * attribution     https://github.com/crlsndrsjmnz/MyShareImageExample/blob/master/app/src/
-         * main/java/co/carlosandresjimenez/android/myshareimageexample/MainActivity.java
-         */
 
         ViewTreeObserver viewTreeObserver = productImageView.getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

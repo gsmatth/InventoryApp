@@ -4,8 +4,6 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-//import android.support.v4.app.LoaderManager;
-//import android.support.v4.content.Loader;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -17,12 +15,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.math.*;
-import java.text.*;
-
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
-
-import java.util.Locale;
 
 public class InventoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -46,14 +39,9 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         productItems.setAdapter(mCursorAdapter);
 
         productItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            /**
-             *solved issue with method not being called by using solution highlighted in:
-             * https://stackoverflow.com/questions/2098558/listview-with-clickable-editable-widget
-             */
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.v(LOG_TAG, "onItemClick entered");
 
                 //Intent(Context packageContext, Class<?> cls)
                 //Create an intent for a specific component
@@ -84,7 +72,6 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
             }
         });
 
-
         //calls onCreateLoader on initial load of activity
         getLoaderManager().initLoader(URL_LOADER, null, this);
     }
@@ -102,7 +89,6 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        Log.v(LOG_TAG, "entered onCreateLoader");
         String[] projection = {
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
@@ -136,9 +122,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v(LOG_TAG, "entered onLoadFinished");
         mCursorAdapter.swapCursor(data);
-
     }
 
     /**
