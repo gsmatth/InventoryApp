@@ -3,7 +3,9 @@ package com.example.android.inventoryapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.icu.text.NumberFormat;
 import android.net.Uri;
+import android.util.FloatProperty;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +18,18 @@ import android.widget.Toast;
 import com.example.android.inventoryapp.data.ProductContract;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
+import java.util.Locale;
+
 /**
  * Created by djp on 9/20/17.
  */
 
-public class ProductCursorAdapter  extends CursorAdapter{
+public class ProductCursorAdapter extends CursorAdapter {
 
     public static final String LOG_TAG = ProductCursorAdapter.class.getSimpleName();
 
 
-    public ProductCursorAdapter(Context context, Cursor cursor){
+    public ProductCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
     }
 
@@ -40,10 +44,11 @@ public class ProductCursorAdapter  extends CursorAdapter{
      * This method binds the product data(in the row being pointed to in the cursor)
      * to the given list item layout.  For example, the name of the current product can be set on
      * the "item_product_name" text view in the list item layout
-     * @param view          existing view
-     * @param context       app context
-     * @param cursor        The cursor from which to get the data.  The cursor is already  moved
-     *                      to the correct row
+     *
+     * @param view    existing view
+     * @param context app context
+     * @param cursor  The cursor from which to get the data.  The cursor is already  moved
+     *                to the correct row
      */
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
@@ -55,12 +60,14 @@ public class ProductCursorAdapter  extends CursorAdapter{
 
         String name = cursor.getString(cursor.getColumnIndex("name"));
         final String quantity = cursor.getString(cursor.getColumnIndex("quantity"));
-        String price = cursor.getString(cursor.getColumnIndex("price"));
+        Float price = cursor.getFloat(cursor.getColumnIndex("price"));
+        Float priceFloat = (Float.valueOf(price) / 100);
+        String currencyString = String.format("%.2f", priceFloat);
         String _id = cursor.getString(cursor.getColumnIndex("_id"));
 
         productName.setText(name);
         productQuantity.setText(quantity);
-        productPrice.setText(price);
+        productPrice.setText("$" + currencyString);
 
         /**the saleButton functionality was accomplished with the assistance of:
          *
@@ -68,7 +75,7 @@ public class ProductCursorAdapter  extends CursorAdapter{
          *   AND
          * https://stackoverflow.com/questions/15941374/how-do-i-call-onclick-listener-of-a-
          * button-which-resides-in-listview-item?rq=1
-*/
+         */
         final Uri itemUri = Uri.withAppendedPath(ProductEntry.CONTENT_URI, _id);
 
         Button saleButton = (Button) view.findViewById(R.id.item_product_sale_button);
@@ -94,6 +101,6 @@ public class ProductCursorAdapter  extends CursorAdapter{
 
 
         });
-}
+    }
 }
 

@@ -1,20 +1,24 @@
 <resources>
     <string name="app_name">InventoryApp</string>
     <string name="product_sale_button_text">Sale</string>
-    <string name="product_name_header">Name</string>
-    <string name="product_price_header">Price</string>
-    <string name="product_quantity_header">Quantity</string>
+    <string name="product_name_header">Name:</string>
+    <string name="product_price_header">Price:</string>
+    <string name="product_quantity_header">Quantity:</string>
+    <string name="product_price_in_cents_header">Price In Cents:</string>
     <string name="add_new_product">Add New Product</string>
     <string name="increase_item_quantity">Increase Quantity</string>
     <string name="decrease_item_quantity">Decrease Quantity</string>
     <string name="delete_product_from_database">Delete This Product From the Database</string>
     <string name="product_inventory_header">Current Inventory:</string>
     <string name="product_supplier_name_header">Product Supplier:</string>
-    <string name="product_supplier_email_header">Supplier Email</string>
+    <string name="product_supplier_email_header">Supplier Email:</string>
     <string name="product_photo_header">Link to Image</string>
     <string name="order_product_from_supplier">Order Product From Supplier</string>
     <string name="delete_product_dialog_msg">Delete this product from the database?</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
-
+    <string name="select_product_image_button">Select Product Image</string>
+    <string name="add_product_to_database_button">Add Product To Database</string>
+    <string name="inventory_activity_empty_view">There are no saved products.
+        Click on ADD NEW PRODUCTS button below to start adding new products.</string>
 </resources>

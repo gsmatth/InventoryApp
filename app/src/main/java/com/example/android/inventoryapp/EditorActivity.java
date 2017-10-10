@@ -27,21 +27,17 @@ import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
-import static android.R.attr.data;
+;
 import static android.R.attr.id;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 
 /**
  * Created by djp on 9/20/17.
  */
 
-public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = EditorActivity.class.getSimpleName();
 
@@ -57,20 +53,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private static final int SELECT_IMAGE_REQUEST = 0;
 
 
-
-
     private Uri currentProductUri;
     private static final int URL_LOADER = 0;
     private boolean mProductHasChanged = false;
 
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener(){
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
-        public boolean onTouch(View view, MotionEvent motionEvent){
+        public boolean onTouch(View view, MotionEvent motionEvent) {
             mProductHasChanged = true;
             return false;
         }
     };
-    protected void onCreate(Bundle savedInstanceState){
+
+    protected void onCreate(Bundle savedInstanceState) {
         Log.v(LOG_TAG, "entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
@@ -95,9 +90,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 
         final Button selectProductImageButton = (Button) findViewById(R.id.select_product_image_button);
-        selectProductImageButton.setOnClickListener(new View.OnClickListener(){
+        selectProductImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 Log.v(LOG_TAG, "selectProductImageButton onClick called");
                 openImageSelector();
             }
@@ -111,21 +106,22 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 //        BigDecimal result2 = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP);
 //        NumberFormat priceFormatted = NumberFormat.getCurrencyInstance(new Locale("usd"));
 //        Log.v(LOG_TAG, "Amont formated into dollars: " + priceFormatted.format(result2));
+//        Currency dollarFormatter = Currency.getInstance().getSymbol();
 
         Button addNewProductButton = (Button) findViewById(R.id.add_new_product_button);
-        addNewProductButton.setOnClickListener(new View.OnClickListener(){
+        addNewProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 Log.v(LOG_TAG, "entered onClick, calling saveProduct method");
                 saveProduct();
             }
         });
-}
+    }
 
-    public void openImageSelector(){
+    public void openImageSelector() {
         Log.v(LOG_TAG, "entered openImageSelector");
         Intent intent;
-        if(Build.VERSION.SDK_INT < 19){
+        if (Build.VERSION.SDK_INT < 19) {
             Log.v(LOG_TAG, "using sdk < 19");
             intent = new Intent(Intent.ACTION_GET_CONTENT);
         } else {
@@ -140,12 +136,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     //called when photo is clicked on in openImageSelector method
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData){
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
 
         Log.v(LOG_TAG, "entered onActivityResults");
-        if(requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK){
+        if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             Log.v(LOG_TAG, "value of resultData: " + resultData.getData());
-            if(resultData != null){
+            if (resultData != null) {
                 productImageUri = resultData.getData();
                 Log.v(LOG_TAG, "productImageUri value in onActivityResult: " + productImageUri);
                 mProductImageUri.setText(productImageUri.toString());
@@ -220,18 +216,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         int productQuantity = 0;
         int productPrice = 0;
-        try{
+        try {
             productQuantity = Integer.parseInt(mProductQuantity.getText().toString().trim());
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             mNullValues.add("quantity");
             Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
             joined = TextUtils.join(", ", mNullValues);
             Log.v(LOG_TAG, "value of string in array, converted to a single string: " + joined);
         }
 
-        try{
+        try {
             productPrice = Integer.parseInt(mProductPrice.getText().toString().trim());
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             mNullValues.add("price");
             Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
             joined = TextUtils.join(", ", mNullValues);
@@ -252,7 +248,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (productSupplierName.isEmpty()) {
             mNullValues.add("supplier name");
             Log.v(LOG_TAG, "length of arraylist: " + mNullValues.size());
-            joined = TextUtils.join(", ", mNullValues);;
+            joined = TextUtils.join(", ", mNullValues);
+            ;
         }
 
         if (productSupplierEmail.isEmpty()) {
@@ -268,9 +265,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         }
 
-            if(mNullValues.size() > 0){
-                Toast.makeText(this, "The following items are blank and have to be updated before" +
-                                " you can save the new product: " + joined, Toast.LENGTH_LONG).show();
+        if (mNullValues.size() > 0) {
+            Toast.makeText(this, "The following items are blank and have to be updated before" +
+                    " you can save the new product: " + joined, Toast.LENGTH_LONG).show();
 
         } else {
             Log.v(LOG_TAG, "entered else block in saveProduct()");
@@ -309,7 +306,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ProductEntry.COLUMN_PRODUCT_IMAGE_URI
 
         };
-        switch(id){
+        switch (id) {
             case URL_LOADER:
                 return new CursorLoader(
                         this,
@@ -327,7 +324,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.v(LOG_TAG, "entered onLoadFinished");
-        if(data.moveToFirst()){
+        if (data.moveToFirst()) {
             data.moveToFirst();
             String mProductName = data.getString(data.getColumnIndex("name"));
             int mProductQuantity = data.getInt(data.getColumnIndex("quantity"));

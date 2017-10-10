@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,12 +37,11 @@ import java.util.Locale;
 import static android.net.Uri.parse;
 
 
-
 /**
  * Created by djp on 9/22/17.
  */
 
-public class ProductDetailActivity  extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class ProductDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = ProductDetailActivity.class.getSimpleName();
     private Uri currentProductUri;
@@ -51,7 +51,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 
     private String mProductName;
     private Integer mProductQuantity;
-    private Integer mProductPrice;
+    private Float mProductPrice;
     private String mProductSupplierName;
     private String mProductSupplierEmail;
     private String mProductImageUri;
@@ -61,17 +61,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
     private TextView productImageTextView;
     private Uri productImageUri;
 
-
-
-    //Do we need this function?
-//    private View.OnTouchListener mTouchListener = new View.OnTouchListener(){
-//        @Override
-//        public boolean onTouch(View view, MotionEvent motionEvent){
-//            mProductHasChanged = true;
-//            return false;
-//        }
-//    };
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         Log.v(LOG_TAG, "entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_product);
@@ -82,58 +72,57 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 
 
         final Button increaseQuantityButton = (Button) findViewById(R.id.increase_quantity_button);
-        increaseQuantityButton.setOnClickListener(new View.OnClickListener(){
+        increaseQuantityButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 Log.v(LOG_TAG, "called onClickListener for increase quantity button");
                 int numberOfRowsUpdated = increaseProductQuantity(currentProductUri);
-
             }
         });
 
         final Button decreaseQuantityButton = (Button) findViewById(R.id.decrease_quantity_button);
-        decreaseQuantityButton.setOnClickListener(new View.OnClickListener(){
+        decreaseQuantityButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 Log.v(LOG_TAG, "called onClickListener for increase quantity button");
                 int numberOfRowsUpdated = decreaseProductQuantity(currentProductUri);
-
             }
         });
 
         final Button deleteProductButton = (Button) findViewById(R.id.delete_product_button);
-        deleteProductButton.setOnClickListener(new View.OnClickListener(){
+        deleteProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
-                    public void onClick(View view){
+            public void onClick(View view) {
                 showDeleteConfirmationDialog();
                 Log.v(LOG_TAG, "entered onClick for deleteProductButton");
             }
         });
 
         final Button orderProductButton = (Button) findViewById(R.id.order_product_button);
-        orderProductButton.setOnClickListener(new View.OnClickListener(){
+        orderProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
-                    public void onClick(View view){
-                    orderProduct(view);
+            public void onClick(View view) {
+                orderProduct(view);
 
             }
         });
 
         // //calls onCreateLoader on initial load of activity
-        if(currentProductUri != null){
+        if (currentProductUri != null) {
             getLoaderManager().initLoader(URL_LOADER, null, this);
         }
+    }
 
-    };
+    ;
 
-    private void showDeleteConfirmationDialog(){
+    private void showDeleteConfirmationDialog() {
         Log.v(LOG_TAG, " entered showDeleteConfirmationDialog");
-        AlertDialog.Builder  builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         Log.v(LOG_TAG, "row 1");
         builder.setMessage(R.string.delete_product_dialog_msg);
         Log.v(LOG_TAG, "row2");
-        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int id){
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 Log.v(LOG_TAG, "entered onCLick in showDeleteConfirmationDIalog");
                 deleteProduct(currentProductUri);
             }
@@ -143,7 +132,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 Log.v(LOG_TAG, "enterd dialog dismiss in setNegativeButton");
-                if(dialog != null){
+                if (dialog != null) {
                     dialog.dismiss();
                 }
             }
@@ -152,7 +141,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
         alertDialog.show();
     }
 
-    private void orderProduct(View view){
+    private void orderProduct(View view) {
         Log.v(LOG_TAG, "entered orderProduct method");
         TextView productNameView = (TextView) findViewById(R.id.detailed_product_name_text);
         String productName = productNameView.getText().toString().trim();
@@ -162,15 +151,13 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
         String[] addresses = new String[]{supplierEmail};
         String subject = "Request for estimate on part: " + productName;
         String emailBody = "Please respond to this email address with an estimate of the cost " +
-                 "to purchase one " + productName + ". The estimate should include any applicable " +
-                 "sales tax and shipping costs.";
-        Log.v(LOG_TAG, "email body: " +emailBody);
+                "to purchase one " + productName + ". The estimate should include any applicable " +
+                "sales tax and shipping costs.";
+        Log.v(LOG_TAG, "email body: " + emailBody);
         composeEmail(addresses, ccAddresses, subject, emailBody);
-
-
     }
 
-    public void composeEmail(String[] addresses, String[] ccAddresses, String subject, String emailBody){
+    public void composeEmail(String[] addresses, String[] ccAddresses, String subject, String emailBody) {
         Log.v(LOG_TAG, "entered compose email method");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(parse("mailto:"));
@@ -178,18 +165,18 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
         intent.putExtra(Intent.EXTRA_CC, ccAddresses);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
-        if(intent.resolveActivity(getPackageManager()) != null){
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         } else {
             Log.v(LOG_TAG, "unable to start activity because resolve activity is null");
         }
     }
 
-    private int increaseProductQuantity(Uri uri){
+    private int increaseProductQuantity(Uri uri) {
         Log.v(LOG_TAG, "entered increaseProductQuantity");
         TextView currentQuantityView = (TextView) findViewById(R.id.detailed_product_current_inventory_text);
         int currentQuantity = Integer.parseInt(currentQuantityView.getText().toString());
-        Log.v(LOG_TAG,"value of current quantity as integer: " + currentQuantity );
+        Log.v(LOG_TAG, "value of current quantity as integer: " + currentQuantity);
         int newQuantity = currentQuantity + 1;
         Log.v(LOG_TAG, "value of new quantity as an int: " + newQuantity);
 
@@ -201,12 +188,11 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
                 values,
                 null,
                 null
-                );
-
+        );
         return mRowsUpdated;
     }
 
-    private int deleteProduct(Uri uri){
+    private int deleteProduct(Uri uri) {
         Log.v(LOG_TAG, "entered deleteProduct");
         int mRowsDeleted = getContentResolver().delete(
                 uri,
@@ -237,7 +223,6 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
                     null,
                     null
             );
-
         }
         return mRowsUpdated;
     }
@@ -245,16 +230,15 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
     public Bitmap getBitMapFromUri(Uri productImageUri) {
 
         Log.v(LOG_TAG, "entered getBitMapFromUri");
-//
+
         if (productImageUri == null || productImageUri.toString().isEmpty()) {
             Log.v(LOG_TAG, "productImageUri is null or is empty");
             return null;
         }
-//
+
         int targetW = productImageView.getWidth();
         int targetH = productImageView.getHeight();
-//        return null;
-//
+
         InputStream input = null;
         try {
             Log.v(LOG_TAG, "entered try block");
@@ -279,7 +263,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
 
             input = this.getContentResolver().openInputStream(productImageUri);
             Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
-            if(bitmap == null){
+            if (bitmap == null) {
                 Log.v(LOG_TAG, "bitmap is null");
             }
             input.close();
@@ -305,9 +289,10 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
      * it queries through the ContentResolver to the ProductProvider.query().  Upon completion
      * of the query, the LoaderManager calls the onLoadFinished and passes the Cursor with
      * the returned data
-     * @param id            the row id of the cursor
+     *
+     * @param id   the row id of the cursor
      * @param args
-     * @return              Cursor object with data or null if no row id passed in
+     * @return Cursor object with data or null if no row id passed in
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -321,7 +306,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
                 ProductEntry.COLUMN_PRODUCT_IMAGE_URI
         };
-        switch(id){
+        switch (id) {
             case URL_LOADER:
                 return new CursorLoader(
                         this,
@@ -339,25 +324,21 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
     /**
      * data, in the form of a Cursor, is passed in from CursorLoader created in onCreateLoader above.
      * That data is passed to the CursorAdapter, which interacts with the UI to update view of data.
-     * @param loader        CursorLoader created in onCreateLoader
-     * @param data          Cursor object with data
+     *
+     * @param loader CursorLoader created in onCreateLoader
+     * @param data   Cursor object with data
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.v(LOG_TAG, "entered onLoadFinished");
         Log.v(LOG_TAG, "value of cursor: " + data);
-        if(data.moveToFirst()){
+        if (data.moveToFirst()) {
             data.moveToFirst();
             mProductName = data.getString(data.getColumnIndex("name"));
             mProductQuantity = data.getInt(data.getColumnIndex("quantity"));
-            mProductPrice = data.getInt(data.getColumnIndex("price"));
-//            double price = 100.12;
-            BigDecimal productPriceDecimal = new BigDecimal(mProductPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
-            NumberFormat productPriceFormatted = NumberFormat.getCurrencyInstance(new Locale("usd"));
-            String formattedPrice = productPriceFormatted.format(productPriceDecimal);
-            Log.v(LOG_TAG, "formattedPrice:  " + formattedPrice);
-
-
+            mProductPrice = data.getFloat(data.getColumnIndex("price"));
+            Float priceFloat = (Float.valueOf(mProductPrice / 100));
+            String currencyString = String.format("%.2f", priceFloat);
 
 
             mProductSupplierName = data.getString(data.getColumnIndex("supplier"));
@@ -365,7 +346,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             mProductImageUri = data.getString(data.getColumnIndex("image_uri"));
             Log.v(LOG_TAG, "value of name in cursor: " + mProductName);
             Log.v(LOG_TAG, "value of quantity in cursor: " + mProductQuantity);
-            Log.v(LOG_TAG, "value of price in cursor: " + mProductPrice);
+            Log.v(LOG_TAG, "value of price in cursor: " + currencyString);
             Log.v(LOG_TAG, "value of supplier in cursor: " + mProductSupplierName);
             Log.v(LOG_TAG, "value of email in cursor: " + mProductSupplierEmail);
             Log.v(LOG_TAG, "value of imageSourceId in cursor: " + mProductImageUri);
@@ -381,7 +362,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             TextView productPriceText = (TextView)
                     findViewById(R.id.detailed_product_price_text);
 //            productPriceText.setText(String.valueOf(mProductPrice));
-            productPriceText.setText(formattedPrice);
+            productPriceText.setText("$" + currencyString);
 
             TextView productSupplierNameText = (TextView)
                     findViewById(R.id.detailed_product_supplier_name_text);
@@ -392,7 +373,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
             productSupplierEmailText.setText(mProductSupplierEmail);
 
             ViewTreeObserver viewTreeObserver = productImageView.getViewTreeObserver();
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
                 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                 @Override
@@ -402,7 +383,6 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
                 }
             });
         }
-
     }
 
     @Override
@@ -434,7 +414,7 @@ public class ProductDetailActivity  extends AppCompatActivity implements LoaderM
          */
 
         ViewTreeObserver viewTreeObserver = productImageView.getViewTreeObserver();
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
