@@ -201,6 +201,8 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
         return mRowsUpdated;
     }
 
+
+
     public Bitmap getBitMapFromUri(Uri productImageUri) {
 
         if (productImageUri == null || productImageUri.toString().isEmpty()) {
@@ -233,9 +235,6 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
 
             input = this.getContentResolver().openInputStream(productImageUri);
             Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
-            if (bitmap == null) {
-                Log.v(LOG_TAG, "bitmap is null");
-            }
             input.close();
             return bitmap;
 
@@ -252,6 +251,7 @@ public class ProductDetailActivity extends AppCompatActivity implements LoaderMa
         }
         return null;
     }
+
 
     /**
      * Creates a CursorLoader and defines the data you want to query.  Then, off the main thread
